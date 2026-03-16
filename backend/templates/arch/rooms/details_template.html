@@ -1,0 +1,178 @@
+{% extends "sqladmin/layout.html" %} {% block content %}
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="card-title">{{model.id}}: {{model.name}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <div class="dropdown">
+          <a
+            href="#"
+            class="btn-action dropdown-toggle show"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="true"
+            ><i class="fa-solid fa-bars"></i
+          ></a>
+          <div
+            class="dropdown-menu dropdown-menu-end"
+            style="
+              position: absolute;
+              inset: 0px 0px auto auto;
+              margin: 0px;
+              transform: translate(0px, 21px);
+            "
+            data-popper-placement="bottom-end"
+          >
+            <a
+              href="{{ url_for('admin:list', identity=model_view.identity) }}"
+              class="dropdown-item"
+            >
+              Go Back
+            </a>
+            {% if model_view.can_edit %}
+            <a
+              href="{{ model_view._build_url_for('admin:edit', request, model) }}"
+              class="dropdown-item text-primary"
+            >
+              Edit
+            </a>
+            {% endif %} {% if model_view.can_delete %}
+            <a
+              href="#"
+              data-name="{{ model_view.name }}"
+              data-pk="{{ get_object_identifier(model) }}"
+              data-url="{{ model_view._url_for_delete(request, model) }}"
+              data-bs-toggle="modal"
+              data-bs-target="#modal-delete"
+              class="dropdown-item text-danger"
+            >
+              Delete
+            </a>
+            {% endif %} {% for custom_action,label in
+            model_view._custom_actions_in_detail.items() %} {% if custom_action
+            in model_view._custom_actions_confirmation %}
+            <a
+              href="#"
+              class="dropdown-item text-secondary"
+              data-bs-toggle="modal"
+              data-bs-target="#modal-confirmation-{{ custom_action }}"
+            >
+              {{ label }}
+            </a>
+            {% else %}
+            <a
+              href="{{ model_view._url_for_action(request, custom_action) }}?pks={{ get_object_identifier(model) }}"
+              class="dropdown-item text-secondary"
+            >
+              {{ label }}
+            </a>
+            {% endif %} {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body border-bottom py-3">
+      <div class="mt-2 mb-4">
+        <div class="row">
+          <div class="col-auto">
+            <div class="link-secondary">
+              <i class="fa-solid fa-calendar-day"></i>
+              {{model.status}}
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="link-secondary">
+              <i class="fa-solid fa-calendar-day"></i>
+              {{model.started_at.strftime("%H:%M %d %B %Y")}} -
+              {{model.ended_at.strftime("%H:%M %d %B %Y")}}
+            </div>
+          </div>
+          <div class="col-auto">
+            <a href="#" class="link-secondary"
+              ><i class="fa-solid fa-share-nodes"></i> Candidate</a
+            >
+          </div>
+          <div class="col-auto">
+            <a href="#" class="link-secondary"
+              ><i class="fa-solid fa-share-nodes"></i> Revier</a
+            >
+          </div>
+        </div>
+      </div>
+
+      {%if model.description%}
+      <div class="mt-4">{{model.description}}</div>
+      {%endif%}
+
+      <h3 class="mt-4">{{model.task.name}}</h3>
+      <div>{{model.task.description}}</div>
+
+      <a
+        href="{{ model_view._url_for_details_with_prop(request, model, 'task') }}"
+        class="link text-primary"
+        >Перейти</a
+      >
+    </div>
+  </div>
+</div>
+
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <ul
+        class="nav nav-tabs card-header-tabs"
+        data-bs-toggle="tabs"
+        role="tablist"
+      >
+        {% for answer in model.answers %}
+        <li class="nav-item" role="presentation">
+          <a
+            href="#tabs-{{ answer.id }} "
+            class="nav-link{% if loop.first %} active{% endif %}"
+            data-bs-toggle="tab"
+            aria-selected="true"
+            role="tab"
+            >{{ answer.section.name }}</a
+          >
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="card-body">
+      <div class="tab-content">
+        {% for answer in model.answers %}
+        <div
+          class="tab-pane{% if loop.first %} active show{% endif %}"
+          id="tabs-{{ answer.id }}"
+          role="tabpanel"
+        >
+          <h3>Секция</h3>
+          <div>{{answer.section.description}}</div>
+
+          <h3 class="mt-4">Ответ</h3>
+          <div>{{answer.candidate_answer}}</div>
+
+          <h3 class="mt-4">Отзыв</h3>
+          <div>{{answer.reviewer_comment}}</div>
+
+          <span class="badge bg-dark-lt mt-5">{{answer.mark}}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if model_view.can_delete %} {% include 'sqladmin/modals/delete.html' %}
+{%endif %} {% for custom_action in model_view._custom_actions_in_detail %} {% if
+custom_action in model_view._custom_actions_confirmation %} {% with
+confirmation_message = model_view._custom_actions_confirmation[custom_action],
+custom_action=custom_action, url=model_view._url_for_action(request,
+custom_action) + '?pks=' + (get_object_identifier(model) | string) %} {% include
+'sqladmin/modals/details_action_confirmation.html' %} {% endwith %} {% endif %}
+{% endfor %} {% endblock %}

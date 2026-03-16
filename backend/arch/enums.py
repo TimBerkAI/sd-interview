@@ -1,0 +1,39 @@
+from enum import StrEnum
+
+
+class TaskStatusEnum(StrEnum):
+    DRAFT = "DRAFT"
+    AWAITING_CONFIRMATION = "AWAITING_CONFIRMATION"
+    CONFIRMED = "CONFIRMED"
+    ARCHIVED = "ARCHIVED"
+
+
+class SectionStatusEnum(StrEnum):
+    DRAFT = "DRAFT"
+    AWAITING_CONFIRMATION = "AWAITING_CONFIRMATION"
+    CONFIRMED = "CONFIRMED"
+    ARCHIVED = "ARCHIVED"
+
+
+class SectionTypeEnum(StrEnum):
+    REQUIREMENTS = "REQUIREMENTS"
+    CALCULATION = "CALCULATION"
+    DATA_MODEL = "DATA_MODEL"
+    API = "API"
+    HLD = "HLD"
+    LLD = "LLD"
+    RISKS = "RISKS"
+
+
+class TemplateStatusEnum(StrEnum):
+    DRAFT = "DRAFT"
+    AWAITING_CONFIRMATION = "AWAITING_CONFIRMATION"
+    CONFIRMED = "CONFIRMED"
+    ARCHIVED = "ARCHIVED"
+
+
+class RoomStatusEnum(StrEnum):
+    PENDING = "PENDING"
+    ACTIVE = "ACTIVE"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"

@@ -1,0 +1,22 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Simple SD rooms"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
+    "fastapi[standard]>=0.135.1",
+    "psycopg2-binary>=2.9.11",
+    "pydantic-settings>=2.13.1",
+    "sqladmin>=0.23.0",
+    "sqlalchemy[asyncio]>=2.0.48",
+    "uvicorn>=0.41.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "ruff>=0.15.5",
+]

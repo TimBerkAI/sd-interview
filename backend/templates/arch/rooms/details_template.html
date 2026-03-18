@@ -93,14 +93,18 @@
               {{model.ended_at.strftime("%H:%M %d %B %Y")}}
             </div>
           </div>
+        </div>
+        <div class="row">
           <div class="col-auto">
             <a href="#" class="link-secondary"
-              ><i class="fa-solid fa-share-nodes"></i> Candidate</a
+              ><i class="fa-solid fa-share-nodes"></i> Candidate -
+              {{model.candidate_token}}</a
             >
           </div>
           <div class="col-auto">
             <a href="#" class="link-secondary"
-              ><i class="fa-solid fa-share-nodes"></i> Revier</a
+              ><i class="fa-solid fa-share-nodes"></i> Revier -
+              {{model.reviewer_token}}</a
             >
           </div>
         </div>

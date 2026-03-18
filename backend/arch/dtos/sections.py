@@ -15,3 +15,12 @@ class SectionListDTO(BaseDTO):
     order: int
     type: SectionTypeEnum
     score_scale: list[ScoreScaleDTO]
+
+
+class SectionDetailDTO(BaseDTO):
+    id: int
+    name: str
+    description: str | None = None
+    order: int
+    type: SectionTypeEnum
+    score_scale: list[ScoreScaleDTO]

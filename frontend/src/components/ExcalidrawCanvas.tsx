@@ -1,7 +1,7 @@
 import { Excalidraw } from '@excalidraw/excalidraw';
 import '@excalidraw/excalidraw/index.css';
 import type { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo } from 'react';
 
 interface ExcalidrawCanvasProps {
   value: string;
@@ -9,12 +9,25 @@ interface ExcalidrawCanvasProps {
   disabled: boolean;
 }
 
-export function ExcalidrawCanvas({ value, onChange, disabled }: ExcalidrawCanvasProps) {
+export const ExcalidrawCanvas = memo(function ExcalidrawCanvas({ value, onChange, disabled }: ExcalidrawCanvasProps) {
   const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
   const initialDataLoaded = useRef(false);
+  const isLocalChange = useRef(false);
+  const isReady = useRef(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      isReady.current = true;
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (excalidrawAPI && value && !initialDataLoaded.current) {
+      if (isLocalChange.current) {
+        isLocalChange.current = false;
+        return;
+      }
       try {
         const data = JSON.parse(value);
         excalidrawAPI.updateScene(data);
@@ -26,8 +39,9 @@ export function ExcalidrawCanvas({ value, onChange, disabled }: ExcalidrawCanvas
   }, [excalidrawAPI, value]);
 
   const handleChange = (elements: readonly any[], appState: any) => {
-    if (disabled) return;
+    if (disabled || !isReady.current) return;
 
+    isLocalChange.current = true;
     const sceneData = {
       elements,
       appState: {
@@ -54,4 +68,4 @@ export function ExcalidrawCanvas({ value, onChange, disabled }: ExcalidrawCanvas
       />
     </div>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, MessageSquare, Star, Clock } from 'lucide-react';
 import { api } from '../services/api';
@@ -83,10 +83,10 @@ export function InterviewRoom({ token }: InterviewRoomProps) {
   }, []);
 
   const wsUrl = session ? `${import.meta.env.VITE_WS_URL || `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`}/ws/${session.room.id}/` : null;
-  console.log('Connecting to:', wsUrl);
-  const { isConnected, sendMessage } = useWebSocket(wsUrl, {
+  const wsOptions = useMemo(() => ({
     onMessage: handleWSMessage,
-  });
+  }), [handleWSMessage]);
+  const { isConnected, sendMessage } = useWebSocket(wsUrl, wsOptions);
 
   const handleAnswerChange = async (text: string) => {
     if (!session) return;

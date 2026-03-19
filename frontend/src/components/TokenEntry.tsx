@@ -1,18 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
 
-interface TokenEntryProps {
-  onSubmit: (token: string) => void;
-  loading: boolean;
-}
-
-export function TokenEntry({ onSubmit, loading }: TokenEntryProps) {
+export function TokenEntry() {
+  const navigate = useNavigate();
   const [token, setToken] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (token.trim()) {
-      onSubmit(token.trim());
+      navigate(`/room/${token.trim()}`);
     }
   };
 
@@ -34,18 +31,17 @@ export function TokenEntry({ onSubmit, loading }: TokenEntryProps) {
               value={token}
               onChange={(e) => setToken(e.target.value)}
               placeholder="Enter your token..."
-              disabled={loading}
-              className="w-full px-6 py-4 bg-gray-800/50 border border-gray-700 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full px-6 py-4 bg-gray-800/50 border border-gray-700 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent backdrop-blur-sm transition-all"
               autoFocus
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading || !token.trim()}
+            disabled={!token.trim()}
             className="w-full py-4 px-6 bg-white text-gray-900 rounded-2xl font-semibold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xl"
           >
-            {loading ? 'Joining...' : 'Join Room'}
+            Join Room
           </button>
         </form>
 

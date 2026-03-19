@@ -1,4 +1,4 @@
-import { CircleCheck as CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import type { Section, RoomAnswer } from '../types';
 
 interface SectionNavbarProps {

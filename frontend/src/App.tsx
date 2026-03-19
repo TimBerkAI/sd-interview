@@ -1,25 +1,16 @@
-import { useState } from "react";
-import { BrowserRouter } from "react-router-dom";
-import { TokenEntry } from "./components/TokenEntry";
-import { InterviewRoom } from "./components/InterviewRoom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Home } from "./components/Home";
+import { CandidateRoom } from "./components/CandidateRoom";
+import { InterviewRoomWrapper } from "./components/InterviewRoomWrapper";
 
 function App() {
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleTokenSubmit = async (submittedToken: string) => {
-    setLoading(true);
-    setToken(submittedToken);
-    setLoading(false);
-  };
-
   return (
     <BrowserRouter>
-      {!token ? (
-        <TokenEntry onSubmit={handleTokenSubmit} loading={loading} />
-      ) : (
-        <InterviewRoom token={token} />
-      )}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/room/:token" element={<CandidateRoom />} />
+        <Route path="/interview/:token" element={<InterviewRoomWrapper />} />
+      </Routes>
     </BrowserRouter>
   );
 }

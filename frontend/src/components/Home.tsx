@@ -17,7 +17,7 @@ export function Home() {
   const handleReviewerAccess = (e: React.FormEvent) => {
     e.preventDefault();
     if (reviewerToken.trim()) {
-      navigate(`/review/${reviewerToken.trim()}`);
+      navigate(`/interview/${reviewerToken.trim()}`);
     }
   };
 

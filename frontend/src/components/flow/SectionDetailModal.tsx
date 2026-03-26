@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { X, Save, CheckCircle, Clock, AlertCircle, Archive, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
+import { X, Save, CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, Archive, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { api } from '../../services/api';
-import {WaySection, WaySectionStatus} from '../../types';
-import { SectionDecision, FlowSectionType } from '../../types';
+import type { WaySection } from '../../types';
+import { SectionDecision, SectionStatus, FlowSectionType } from '../../types';
 
 interface SectionDetailModalProps {
   section: WaySection;
@@ -18,9 +18,10 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const STATUS_OPTIONS = [
-  { value: WaySectionStatus.NEW, label: 'New', icon: Clock, cls: 'text-gray-500' },
-  { value: WaySectionStatus.IN_PROGRESS, label: 'In progress', icon: AlertCircle, cls: 'text-blue-500' },
-  { value: WaySectionStatus.END, label: 'End', icon: CheckCircle, cls: 'text-green-500' },
+  { value: SectionStatus.DRAFT, label: 'Draft', icon: Clock, cls: 'text-gray-500' },
+  { value: SectionStatus.AWAITING_CONFIRMATION, label: 'Awaiting', icon: AlertCircle, cls: 'text-blue-500' },
+  { value: SectionStatus.CONFIRMED, label: 'Confirmed', icon: CheckCircle, cls: 'text-green-500' },
+  { value: SectionStatus.ARCHIVED, label: 'Archived', icon: Archive, cls: 'text-gray-400' },
 ];
 
 const DECISION_OPTIONS = [
@@ -31,7 +32,7 @@ const DECISION_OPTIONS = [
 
 export function SectionDetailModal({ section, onClose, onSave }: SectionDetailModalProps) {
   const [review, setReview] = useState(section.review || '');
-  const [status, setStatus] = useState(section.status);
+  const [status, setStatus] = useState<SectionStatus>(section.status);
   const [decision, setDecision] = useState(section.decision);
   const [skillAssessments, setSkillAssessments] = useState(section.skill_assessments || []);
   const [saving, setSaving] = useState(false);
@@ -76,14 +77,14 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
               Status
             </label>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {STATUS_OPTIONS.map((opt) => {
                 const Icon = opt.icon;
                 return (
                   <button
                     key={opt.value}
                     onClick={() => setStatus(opt.value)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm font-medium transition-all ${
                       status === opt.value
                         ? 'bg-gray-900 dark:bg-white border-gray-900 dark:border-white text-white dark:text-gray-900'
                         : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'

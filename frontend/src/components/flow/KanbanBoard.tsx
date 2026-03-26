@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { User, Calendar, Tag, ChevronRight } from 'lucide-react';
 import { api } from '../../services/api';
@@ -6,30 +6,34 @@ import type { CandidateWay } from '../../types';
 import { WayDecision, SectionStatus } from '../../types';
 import { CandidateWayModal } from './CandidateWayModal';
 
-const COLUMNS: { key: WayDecision; label: string; headerCls: string; dotCls: string }[] = [
+const COLUMNS: { key: WayDecision; label: string; headerCls: string; dotCls: string; dropCls: string }[] = [
   {
     key: WayDecision.IN_PROGRESS,
     label: 'In Progress',
     headerCls: 'text-blue-600 dark:text-blue-400',
     dotCls: 'bg-blue-500',
+    dropCls: 'bg-blue-50 dark:bg-blue-900/10 border-blue-300 dark:border-blue-700',
   },
   {
     key: WayDecision.ON_HOLD,
     label: 'On Hold',
     headerCls: 'text-yellow-600 dark:text-yellow-400',
     dotCls: 'bg-yellow-500',
+    dropCls: 'bg-yellow-50 dark:bg-yellow-900/10 border-yellow-300 dark:border-yellow-700',
   },
   {
     key: WayDecision.HIRED,
     label: 'Hired',
     headerCls: 'text-green-600 dark:text-green-400',
     dotCls: 'bg-green-500',
+    dropCls: 'bg-green-50 dark:bg-green-900/10 border-green-300 dark:border-green-700',
   },
   {
     key: WayDecision.REJECTED,
     label: 'Rejected',
     headerCls: 'text-red-600 dark:text-red-400',
     dotCls: 'bg-red-500',
+    dropCls: 'bg-red-50 dark:bg-red-900/10 border-red-300 dark:border-red-700',
   },
 ];
 
@@ -37,7 +41,10 @@ export function KanbanBoard() {
   const [ways, setWays] = useState<CandidateWay[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedWay, setSelectedWay] = useState<CandidateWay | null>(null);
+  const [draggingId, setDraggingId] = useState<number | null>(null);
+  const [overColumn, setOverColumn] = useState<WayDecision | null>(null);
   const [searchParams] = useSearchParams();
+  const dragWayRef = useRef<CandidateWay | null>(null);
 
   useEffect(() => {
     api.getWays().then((data) => {
@@ -55,6 +62,35 @@ export function KanbanBoard() {
   const handleWayUpdate = (updated: CandidateWay) => {
     setWays((prev) => prev.map((w) => (w.id === updated.id ? updated : w)));
     setSelectedWay(updated);
+  };
+
+  const handleDragStart = (way: CandidateWay) => {
+    setDraggingId(way.id);
+    dragWayRef.current = way;
+  };
+
+  const handleDragEnd = () => {
+    setDraggingId(null);
+    setOverColumn(null);
+    dragWayRef.current = null;
+  };
+
+  const handleDrop = async (targetDecision: WayDecision) => {
+    const way = dragWayRef.current;
+    if (!way || way.decision === targetDecision) {
+      setDraggingId(null);
+      setOverColumn(null);
+      dragWayRef.current = null;
+      return;
+    }
+
+    const updated = { ...way, decision: targetDecision };
+    setWays((prev) => prev.map((w) => (w.id === way.id ? updated : w)));
+    setDraggingId(null);
+    setOverColumn(null);
+    dragWayRef.current = null;
+
+    await api.updateWay(way.id, { decision: targetDecision });
   };
 
   if (loading) {
@@ -78,9 +114,26 @@ export function KanbanBoard() {
         <div className="flex gap-5 h-full min-w-max">
           {COLUMNS.map((col) => {
             const colWays = ways.filter((w) => w.decision === col.key);
+            const isDragOver = overColumn === col.key;
 
             return (
-              <div key={col.key} className="w-72 flex flex-col">
+              <div
+                key={col.key}
+                className="w-72 flex flex-col"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setOverColumn(col.key);
+                }}
+                onDragLeave={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                    setOverColumn(null);
+                  }
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  handleDrop(col.key);
+                }}
+              >
                 <div className="flex items-center gap-2.5 mb-4 px-1">
                   <div className={`w-2 h-2 rounded-full flex-shrink-0 ${col.dotCls}`} />
                   <span className={`text-sm font-semibold ${col.headerCls}`}>{col.label}</span>
@@ -89,8 +142,14 @@ export function KanbanBoard() {
                   </span>
                 </div>
 
-                <div className="flex-1 space-y-3 overflow-y-auto pr-1">
-                  {colWays.length === 0 && (
+                <div
+                  className={`flex-1 space-y-3 overflow-y-auto pr-1 rounded-2xl border-2 transition-all duration-150 p-1 ${
+                    isDragOver && draggingId !== null
+                      ? `${col.dropCls} border-dashed`
+                      : 'border-transparent'
+                  }`}
+                >
+                  {colWays.length === 0 && !isDragOver && (
                     <div className="flex items-center justify-center py-12 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800">
                       <span className="text-xs text-gray-400 dark:text-gray-600">Empty</span>
                     </div>
@@ -100,7 +159,10 @@ export function KanbanBoard() {
                     <WayCard
                       key={way.id}
                       way={way}
+                      isDragging={draggingId === way.id}
                       onClick={() => setSelectedWay(way)}
+                      onDragStart={() => handleDragStart(way)}
+                      onDragEnd={handleDragEnd}
                     />
                   ))}
                 </div>
@@ -121,15 +183,31 @@ export function KanbanBoard() {
   );
 }
 
-function WayCard({ way, onClick }: { way: CandidateWay; onClick: () => void }) {
+interface WayCardProps {
+  way: CandidateWay;
+  isDragging: boolean;
+  onClick: () => void;
+  onDragStart: () => void;
+  onDragEnd: () => void;
+}
+
+function WayCard({ way, isDragging, onClick, onDragStart, onDragEnd }: WayCardProps) {
   const completedSections = way.sections.filter((s) => s.status === SectionStatus.CONFIRMED).length;
   const totalSections = way.sections.length;
   const progress = totalSections ? (completedSections / totalSections) * 100 : 0;
 
   return (
-    <button
+    <div
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.effectAllowed = 'move';
+        onDragStart();
+      }}
+      onDragEnd={onDragEnd}
       onClick={onClick}
-      className="w-full bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md transition-all text-left group"
+      className={`w-full bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md transition-all text-left group cursor-grab active:cursor-grabbing select-none ${
+        isDragging ? 'opacity-40 scale-95 shadow-lg' : 'opacity-100'
+      }`}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5">
@@ -183,6 +261,6 @@ function WayCard({ way, onClick }: { way: CandidateWay; onClick: () => void }) {
           {new Date(way.period_start).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
         </div>
       )}
-    </button>
+    </div>
   );
 }

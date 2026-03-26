@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, User, Calendar, Tag, ChevronRight, CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
+import { X, User, Calendar, Tag, ChevronRight, CheckCircle, Clock, AlertCircle, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import type { CandidateWay, WaySection } from '../../types';
 import { SectionDecision, SectionStatus, FlowSectionType, WayDecision } from '../../types';
 import { SectionDetailModal } from './SectionDetailModal';

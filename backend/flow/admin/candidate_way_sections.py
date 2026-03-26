@@ -6,9 +6,9 @@ from flow.models import CandidateWaySections
 
 
 class CandidateWaySectionsAdmin(ModelView, model=CandidateWaySections):
-    name = "Секция пути"
-    name_plural = "Секции пути"
-    icon = "fa-solid fa-list-check"
+    name = 'Секция пути'
+    name_plural = 'Секции пути'
+    icon = 'fa-solid fa-list-check'
 
     column_list = [
         CandidateWaySections.id,
@@ -40,8 +40,8 @@ class CandidateWaySectionsAdmin(ModelView, model=CandidateWaySections):
         CandidateWaySections.skill_assessments,
     ]
     form_overrides = {
-        "review": CKEditorField,
-        "skill_assessments": JSONEditorField,
+        'review': CKEditorField,
+        'skill_assessments': JSONEditorField,
     }
     column_details_list = [
         CandidateWaySections.id,

@@ -8,17 +8,11 @@ from core.use_cases.async_base import RepositoryAsync
 class RoomAnswersRepository(RepositoryAsync):
     model = RoomAnswers
 
-    async def add_for_room_sections(
-        self, room_id: int, sections: list[SectionListDTO]
-    ) -> None:
+    async def add_for_room_sections(self, room_id: int, sections: list[SectionListDTO]) -> None:
         """Добавление ответов для секций комнаты"""
 
         for section in sections:
-            self.session.add(
-                self.model(
-                    room_id=room_id, section_id=section.id, section_order=section.order
-                )
-            )
+            self.session.add(self.model(room_id=room_id, section_id=section.id, section_order=section.order))
 
         await self.session.commit()
 
@@ -28,9 +22,7 @@ class RoomAnswersRepository(RepositoryAsync):
         candidate_answer: str,
     ) -> bool:
         result = await self.session.execute(
-            update(self.model)
-            .where(self.model.id == answer_id)
-            .values(candidate_answer=candidate_answer)
+            update(self.model).where(self.model.id == answer_id).values(candidate_answer=candidate_answer)
         )
         await self.session.commit()
         return int(result.rowcount) > 0
@@ -43,15 +35,13 @@ class RoomAnswersRepository(RepositoryAsync):
     ) -> bool:
         values = {}
         if reviewer_comment is not None:
-            values["reviewer_comment"] = reviewer_comment
+            values['reviewer_comment'] = reviewer_comment
         if mark is not None:
-            values["mark"] = mark
+            values['mark'] = mark
 
         if not values:
             return False
 
-        result = await self.session.execute(
-            update(self.model).where(self.model.id == answer_id).values(**values)
-        )
+        result = await self.session.execute(update(self.model).where(self.model.id == answer_id).values(**values))
         await self.session.commit()
         return int(result.rowcount) > 0

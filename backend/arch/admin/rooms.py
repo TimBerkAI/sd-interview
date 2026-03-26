@@ -9,10 +9,10 @@ from settings.db import AsyncSessionLocal
 
 
 class RoomAdmin(ModelView, model=Rooms):
-    name = "Комната"
-    name_plural = "Комнаты"
-    icon = "fa-solid fa-door-open"
-    details_template = "arch/rooms/detail.html"
+    name = 'Комната'
+    name_plural = 'Комнаты'
+    icon = 'fa-solid fa-door-open'
+    details_template = 'arch/rooms/detail.html'
 
     column_list = [
         Rooms.id,
@@ -26,7 +26,7 @@ class RoomAdmin(ModelView, model=Rooms):
     column_searchable_list = [Rooms.name]
     column_sortable_list = [Rooms.id, Rooms.name, Rooms.status, Rooms.started_at]
     form_overrides = {
-        "description": CKEditorField,
+        'description': CKEditorField,
     }
     form_columns = [
         Rooms.name,
@@ -44,9 +44,7 @@ class RoomAdmin(ModelView, model=Rooms):
     can_view_details = True
     can_export = False
 
-    async def after_model_change(
-        self, data: dict, model: Rooms, is_created: bool, request: Request
-    ) -> None:
+    async def after_model_change(self, data: dict, model: Rooms, is_created: bool, request: Request) -> None:
         """Создаём ответы для каждой секции шаблона после создания комнаты."""
         if not is_created:
             return

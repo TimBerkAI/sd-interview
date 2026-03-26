@@ -7,16 +7,14 @@ from settings.db import Base
 
 
 class Tasks(Base):
-    __tablename__ = "tasks"
+    __tablename__ = 'tasks'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    slug: Mapped[str] = mapped_column(
-        String(255), unique=True, nullable=False, index=True
-    )
+    slug: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[TaskStatusEnum] = mapped_column(
-        SAEnum(TaskStatusEnum, name="task_status"),
+        SAEnum(TaskStatusEnum, name='task_status'),
         nullable=False,
         default=TaskStatusEnum.DRAFT,
     )

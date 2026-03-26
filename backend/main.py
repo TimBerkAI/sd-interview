@@ -9,16 +9,16 @@ from arch.websocket.routes import router as websocket_router
 from flow.api.routes import router as flow_router
 from settings.db import engine
 
-app = FastAPI(title="My Architecture App")
+app = FastAPI(title='My Architecture App')
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=['*'],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount('/static', StaticFiles(directory='static'), name='static')
 app.include_router(websocket_router)
 app.include_router(api_router)
 app.include_router(flow_router)
@@ -38,7 +38,7 @@ from flow.admin import (
     CandidateWayTagsAdmin,
 )  #  noqa:E402
 
-admin = Admin(app, engine, title="Arch Admin", base_url="/admin")
+admin = Admin(app, engine, title='Arch Admin', base_url='/admin')
 admin.add_view(TaskAdmin)
 admin.add_view(TemplateAdmin)
 admin.add_view(SectionAdmin)

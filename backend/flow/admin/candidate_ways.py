@@ -4,9 +4,9 @@ from flow.models.candidate_ways import CandidateWays, CandidateWayTags
 
 
 class CandidateWaysAdmin(ModelView, model=CandidateWays):
-    name = "Путь кандидата"
-    name_plural = "Пути кандидата"
-    icon = "fa-solid fa-road"
+    name = 'Путь кандидата'
+    name_plural = 'Пути кандидата'
+    icon = 'fa-solid fa-road'
 
     column_list = [
         CandidateWays.id,
@@ -52,9 +52,9 @@ class CandidateWaysAdmin(ModelView, model=CandidateWays):
 
 
 class CandidateWayTagsAdmin(ModelView, model=CandidateWayTags):
-    name = "Тэг пути"
-    name_plural = "Тэги пути"
-    icon = "fa-solid fa-link"
+    name = 'Тэг пути'
+    name_plural = 'Тэги пути'
+    icon = 'fa-solid fa-link'
 
     column_list = [
         CandidateWayTags.id,

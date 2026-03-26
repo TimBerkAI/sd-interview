@@ -12,8 +12,6 @@ class SectionsRepository(RepositoryAsync):
         """Получение секций по ID шаблона"""
 
         stmt = await self.session.execute(
-            select(self.model)
-            .where(self.model.template_id == template_id)
-            .order_by(self.model.order)
+            select(self.model).where(self.model.template_id == template_id).order_by(self.model.order)
         )
         return [SectionListDTO.model_validate(item) for item in stmt.scalars().all()]

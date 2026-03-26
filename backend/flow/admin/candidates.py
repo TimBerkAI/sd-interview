@@ -6,9 +6,9 @@ from flow.models import Candidates
 
 
 class CandidatesAdmin(ModelView, model=Candidates):
-    name = "Кандидат"
-    name_plural = "Кандидаты"
-    icon = "fa-solid fa-user"
+    name = 'Кандидат'
+    name_plural = 'Кандидаты'
+    icon = 'fa-solid fa-user'
 
     column_list = [
         Candidates.id,
@@ -26,8 +26,8 @@ class CandidatesAdmin(ModelView, model=Candidates):
         Candidates.created_at,
     ]
     form_overrides = {
-        "description": CKEditorField,
-        "links": JSONEditorField,
+        'description': CKEditorField,
+        'links': JSONEditorField,
     }
     form_columns = [
         Candidates.full_name,

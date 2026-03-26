@@ -13,17 +13,17 @@ if TYPE_CHECKING:
 
 
 class Sections(Base):
-    __tablename__ = "sections"
+    __tablename__ = 'sections'
     __table_args__ = (
         CheckConstraint(
-            "jsonb_array_length(score_scale) BETWEEN 1 AND 5",
-            name="ck_sections_score_scale_length",
+            'jsonb_array_length(score_scale) BETWEEN 1 AND 5',
+            name='ck_sections_score_scale_length',
         ),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     template_id: Mapped[int] = mapped_column(
-        ForeignKey("templates.id", ondelete="CASCADE"),
+        ForeignKey('templates.id', ondelete='CASCADE'),
         nullable=False,
         index=True,
     )
@@ -31,7 +31,7 @@ class Sections(Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     type: Mapped[SectionTypeEnum] = mapped_column(
-        SAEnum(SectionTypeEnum, name="section_type"),
+        SAEnum(SectionTypeEnum, name='section_type'),
         nullable=False,
     )
     # [{"score": 1, "comment": "..."}, ..., {"score": 5, "comment": "..."}]
@@ -41,7 +41,7 @@ class Sections(Base):
         default=list,
     )
 
-    template: Mapped["Templates"] = relationship("Templates", back_populates="sections")
+    template: Mapped['Templates'] = relationship('Templates', back_populates='sections')
 
     def __repr__(self) -> str:
         return self.name

@@ -17,9 +17,7 @@ class RoomDetailAsyncUseCase(AsyncUseCase):
         self.room_ans_repo = RoomAnswersRepository(self.session)
 
     async def execute(self, is_reviewer: bool) -> RoomWithAnswersDTO | None:
-        room = await self.room_repo.find_room_with_answers_by_token(
-            self.token, is_reviewer
-        )
+        room = await self.room_repo.find_room_with_answers_by_token(self.token, is_reviewer)
         if not room:
             return None
         return room

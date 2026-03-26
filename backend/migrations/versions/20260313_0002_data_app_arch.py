@@ -13,18 +13,18 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "8d884983367d"
-down_revision: Union[str, Sequence[str], None] = "1d329a1f11ea"
+revision: str = '8d884983367d'
+down_revision: Union[str, Sequence[str], None] = '1d329a1f11ea'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
 SCORE_SCALE_DEFAULT = [
-    {"score": 1, "comment": "Не раскрыто"},
-    {"score": 2, "comment": "Поверхностно"},
-    {"score": 3, "comment": "Удовлетворительно"},
-    {"score": 4, "comment": "Хорошо"},
-    {"score": 5, "comment": "Отлично"},
+    {'score': 1, 'comment': 'Не раскрыто'},
+    {'score': 2, 'comment': 'Поверхностно'},
+    {'score': 3, 'comment': 'Удовлетворительно'},
+    {'score': 4, 'comment': 'Хорошо'},
+    {'score': 5, 'comment': 'Отлично'},
 ]
 
 
@@ -71,11 +71,11 @@ def upgrade() -> None:
         (7, 1, 'Риски',             'SPOF, bottleneck-и, стратегии масштабирования.',              7, 'RISKS'::section_type,         :score)
         ON CONFLICT (id) DO NOTHING
     """),
-        {"score": score_json},
+        {'score': score_json},
     )
 
 
 def downgrade() -> None:
-    op.execute("TRUNCATE sections CASCADE RESTART IDENTITY")
-    op.execute("TRUNCATE templates CASCADE RESTART IDENTITY")
-    op.execute("TRUNCATE tasks CASCADE RESTART IDENTITY")
+    op.execute('TRUNCATE sections CASCADE RESTART IDENTITY')
+    op.execute('TRUNCATE templates CASCADE RESTART IDENTITY')
+    op.execute('TRUNCATE tasks CASCADE RESTART IDENTITY')

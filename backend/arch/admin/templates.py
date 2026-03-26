@@ -6,9 +6,9 @@ from core.enums import SpecialityEnum
 
 
 class TemplateAdmin(ModelView, model=Templates):
-    name = "Шаблон"
-    name_plural = "Шаблоны"
-    icon = "fa-solid fa-file-lines"
+    name = 'Шаблон'
+    name_plural = 'Шаблоны'
+    icon = 'fa-solid fa-file-lines'
 
     column_list = [Templates.id, Templates.name, Templates.specialty, Templates.status]
     column_searchable_list = [Templates.name]
@@ -26,20 +26,20 @@ class TemplateAdmin(ModelView, model=Templates):
         Templates.sections,
     ]
     form_args = {
-        "specialty": {
-            "label": "Specialty",
-            "choices": [(s.value, s.name) for s in SpecialityEnum],
+        'specialty': {
+            'label': 'Specialty',
+            'choices': [(s.value, s.name) for s in SpecialityEnum],
         },
-        "status": {
-            "label": "Status",
-            "choices": [(s.value, s.name) for s in TemplateStatusEnum],
+        'status': {
+            'label': 'Status',
+            'choices': [(s.value, s.name) for s in TemplateStatusEnum],
         },
     }
     # Async select для связи sections
     form_ajax_refs = {
-        "sections": {
-            "fields": ("name",),
-            "order_by": "name",
+        'sections': {
+            'fields': ('name',),
+            'order_by': 'name',
         }
     }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Save, CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
+import { X, Save, CheckCircle, Clock, AlertCircle, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { api } from '../../services/api';
 import type { WaySection } from '../../types';
 import { SectionDecision, SectionStatus, FlowSectionType } from '../../types';

@@ -10,15 +10,11 @@ if TYPE_CHECKING:
 
 
 class RoomAnswers(Base):
-    __tablename__ = "room_answers"
+    __tablename__ = 'room_answers'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    room_id: Mapped[int] = mapped_column(
-        ForeignKey("rooms.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    section_id: Mapped[int] = mapped_column(
-        ForeignKey("sections.id", ondelete="RESTRICT"), nullable=False, index=True
-    )
+    room_id: Mapped[int] = mapped_column(ForeignKey('rooms.id', ondelete='CASCADE'), nullable=False, index=True)
+    section_id: Mapped[int] = mapped_column(ForeignKey('sections.id', ondelete='RESTRICT'), nullable=False, index=True)
     # Копируем order из секции для стабильной сортировки
     section_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
@@ -26,5 +22,5 @@ class RoomAnswers(Base):
     reviewer_comment: Mapped[str | None] = mapped_column(Text, nullable=True)
     mark: Mapped[int | None] = mapped_column(Integer, nullable=True)  # 1–5
 
-    room: Mapped["Rooms"] = relationship("Rooms", back_populates="answers")
-    section: Mapped["Sections"] = relationship("Sections", lazy="joined")
+    room: Mapped['Rooms'] = relationship('Rooms', back_populates='answers')
+    section: Mapped['Sections'] = relationship('Sections', lazy='joined')

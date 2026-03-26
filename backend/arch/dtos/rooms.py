@@ -17,10 +17,10 @@ class RoomCreateDTO(BaseDTO):
     started_at: datetime
     ended_at: datetime
 
-    @model_validator(mode="after")
-    def validate_dates(self) -> "RoomCreateDTO":
+    @model_validator(mode='after')
+    def validate_dates(self) -> 'RoomCreateDTO':
         if self.ended_at <= self.started_at:
-            raise ValueError("ended_at must be after started_at")
+            raise ValueError('ended_at must be after started_at')
         return self
 
 

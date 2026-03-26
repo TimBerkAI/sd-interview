@@ -13,24 +13,22 @@ if TYPE_CHECKING:
 
 
 class Templates(Base):
-    __tablename__ = "templates"
+    __tablename__ = 'templates'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    specialty: Mapped[SpecialityEnum] = mapped_column(
-        SAEnum(SpecialityEnum, name="specialty"), nullable=False
-    )
+    specialty: Mapped[SpecialityEnum] = mapped_column(SAEnum(SpecialityEnum, name='specialty'), nullable=False)
     status: Mapped[TemplateStatusEnum] = mapped_column(
-        SAEnum(TemplateStatusEnum, name="template_status"),
+        SAEnum(TemplateStatusEnum, name='template_status'),
         nullable=False,
         default=TemplateStatusEnum.DRAFT,
     )
 
-    sections: Mapped[list["Sections"]] = relationship(
-        "Sections",
-        back_populates="template",
-        cascade="all, delete-orphan",
-        order_by="Sections.order",
+    sections: Mapped[list['Sections']] = relationship(
+        'Sections',
+        back_populates='template',
+        cascade='all, delete-orphan',
+        order_by='Sections.order',
     )
 
     def __repr__(self) -> str:

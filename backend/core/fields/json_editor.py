@@ -5,9 +5,7 @@ from markupsafe import Markup
 from wtforms import TextAreaField
 from wtforms.widgets import html_params
 
-_JSONEDITOR_LOCAL_CSS = Markup(
-    '<link href="/static/css/jsoneditor.min.css" rel="stylesheet" />'
-)
+_JSONEDITOR_LOCAL_CSS = Markup('<link href="/static/css/jsoneditor.min.css" rel="stylesheet" />')
 _JSONEDITOR_CSS = Markup(
     '<link href="https://cdn.jsdelivr.net/npm/jsoneditor@10/dist/jsoneditor.min.css" rel="stylesheet" />'
 )
@@ -15,18 +13,18 @@ _JSONEDITOR_JS = Markup('<script src="/static/js/jsoneditor.min.js"></script>')
 
 
 class JSONEditorWidget:
-    def __call__(self, field: "JSONEditorField", **kwargs: Any) -> Markup:
-        field_id = kwargs.get("id", field.id)
-        container_id = f"{field_id}_container"
+    def __call__(self, field: 'JSONEditorField', **kwargs: Any) -> Markup:
+        field_id = kwargs.get('id', field.id)
+        container_id = f'{field_id}_container'
 
-        kwargs["id"] = field_id
-        kwargs["name"] = field.name
-        kwargs["style"] = "display: none;"
+        kwargs['id'] = field_id
+        kwargs['name'] = field.name
+        kwargs['style'] = 'display: none;'
 
         textarea = Markup(
-            "<textarea {attrs}>{value}</textarea>".format(
+            '<textarea {attrs}>{value}</textarea>'.format(
                 attrs=html_params(**kwargs),
-                value=field._value() or "",
+                value=field._value() or '',
             )
         )
 
@@ -70,14 +68,14 @@ class JSONEditorWidget:
 
 
 class JSONEditorField(TextAreaField):
-    def __init__(self, label: str = "", validators=None, **kwargs: Any) -> None:
+    def __init__(self, label: str = '', validators=None, **kwargs: Any) -> None:
         super().__init__(label, validators, **kwargs)
         self.widget = JSONEditorWidget()
 
     def _value(self) -> str:
         """Сериализуем Python-объект → строку для textarea."""
         if self.data is None:
-            return ""
+            return ''
         if isinstance(self.data, str):
             return self.data
         return json.dumps(self.data, ensure_ascii=False)

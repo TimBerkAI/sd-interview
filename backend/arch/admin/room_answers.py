@@ -6,9 +6,9 @@ from core.fields.ckeditor import CKEditorField
 
 
 class RoomAnswerAdmin(ModelView, model=RoomAnswers):
-    name = "Ответ"
-    name_plural = "Ответы"
-    icon = "fa-solid fa-pen-to-square"
+    name = 'Ответ'
+    name_plural = 'Ответы'
+    icon = 'fa-solid fa-pen-to-square'
 
     column_list = [
         RoomAnswers.id,
@@ -32,15 +32,15 @@ class RoomAnswerAdmin(ModelView, model=RoomAnswers):
         RoomAnswers.mark,
     ]
     form_overrides = {
-        "candidate_answer": CKEditorField,
-        "reviewer_comment": CKEditorField,
+        'candidate_answer': CKEditorField,
+        'reviewer_comment': CKEditorField,
     }
     form_args = {
-        "candidate_answer": {"label": "Ответ кандидата", "render_kw": {"rows": 6}},
-        "reviewer_comment": {"label": "Комментарий ревьюера", "render_kw": {"rows": 4}},
-        "mark": {
-            "label": "Оценка (1–5)",
-            "validators": [validators.NumberRange(min=1, max=5)],
+        'candidate_answer': {'label': 'Ответ кандидата', 'render_kw': {'rows': 6}},
+        'reviewer_comment': {'label': 'Комментарий ревьюера', 'render_kw': {'rows': 4}},
+        'mark': {
+            'label': 'Оценка (1–5)',
+            'validators': [validators.NumberRange(min=1, max=5)],
         },
     }
 

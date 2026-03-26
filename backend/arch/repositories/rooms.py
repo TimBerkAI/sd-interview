@@ -25,14 +25,10 @@ class RoomsRepository(RepositoryAsync):
         await self.session.flush()
         return room.id
 
-    async def find_room_with_answers_by_token(
-        self, token: str, is_reviewer: bool
-    ) -> RoomWithAnswersDTO | None:
+    async def find_room_with_answers_by_token(self, token: str, is_reviewer: bool) -> RoomWithAnswersDTO | None:
         """Комната со всеми ответами, секциями и связанными данными."""
 
-        token_field = (
-            self.model.reviewer_token if is_reviewer else self.model.candidate_token
-        )
+        token_field = self.model.reviewer_token if is_reviewer else self.model.candidate_token
 
         result = await self.session.execute(
             select(self.model)
@@ -53,8 +49,6 @@ class RoomsRepository(RepositoryAsync):
         room_id: int,
         status: RoomStatusEnum,
     ) -> bool:
-        result = await self.session.execute(
-            update(self.model).where(self.model.id == room_id).values(status=status)
-        )
+        result = await self.session.execute(update(self.model).where(self.model.id == room_id).values(status=status))
         await self.session.commit()
         return int(result.rowcount) > 0

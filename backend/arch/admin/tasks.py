@@ -6,9 +6,9 @@ from core.fields.ckeditor import CKEditorField
 
 
 class TaskAdmin(ModelView, model=Tasks):
-    name = "Задача"
-    name_plural = "Задачи"
-    icon = "fa-solid fa-list-check"
+    name = 'Задача'
+    name_plural = 'Задачи'
+    icon = 'fa-solid fa-list-check'
 
     column_list = [Tasks.id, Tasks.name, Tasks.slug, Tasks.status]
     column_searchable_list = [Tasks.name, Tasks.slug]
@@ -16,21 +16,21 @@ class TaskAdmin(ModelView, model=Tasks):
 
     form_columns = [Tasks.name, Tasks.slug, Tasks.description, Tasks.status]
     form_overrides = {
-        "description": CKEditorField,
+        'description': CKEditorField,
     }
     form_args = {
-        "description": {
-            "label": "Description",
-            "render_kw": {
-                "rows": 12,
-                "class": "form-control",
+        'description': {
+            'label': 'Description',
+            'render_kw': {
+                'rows': 12,
+                'class': 'form-control',
                 # CKEditor подключается через data-атрибут без сторонних зависимостей
-                "data-editor": "ckeditor",
+                'data-editor': 'ckeditor',
             },
         },
-        "status": {
-            "label": "Status",
-            "choices": [(s.value, s.name) for s in TaskStatusEnum],
+        'status': {
+            'label': 'Status',
+            'choices': [(s.value, s.name) for s in TaskStatusEnum],
         },
     }
 

@@ -8,16 +8,16 @@ _CKEDITOR_JS = Markup('<script src="/static/js/ckeditor.js"></script>')
 
 
 class CKEditorWidget:
-    def __call__(self, field: "CKEditorField", **kwargs: Any) -> Markup:
-        field_id = kwargs.get("id", field.id)
+    def __call__(self, field: 'CKEditorField', **kwargs: Any) -> Markup:
+        field_id = kwargs.get('id', field.id)
 
-        kwargs["id"] = field_id
-        kwargs["name"] = field.name
+        kwargs['id'] = field_id
+        kwargs['name'] = field.name
 
         textarea = Markup(
-            "<textarea {attrs}>{value}</textarea>".format(
+            '<textarea {attrs}>{value}</textarea>'.format(
                 attrs=html_params(**kwargs),
-                value=field._value() or "",
+                value=field._value() or '',
             )
         )
 
@@ -45,13 +45,13 @@ class CKEditorWidget:
 
 
 class CKEditorField(TextAreaField):
-    def __init__(self, label: str = "", validators=None, **kwargs: Any) -> None:
+    def __init__(self, label: str = '', validators=None, **kwargs: Any) -> None:
         super().__init__(label, validators, **kwargs)
         self.widget = CKEditorWidget()
 
     def _value(self) -> str:
         if self.data is None:
-            return ""
+            return ''
         return self.data
 
     def process_formdata(self, valuelist: list) -> None:

@@ -142,9 +142,10 @@ export enum SectionDecision {
 }
 
 export enum SectionStatus {
-  NEW = 'NEW',
-  IN_PROGRESS = 'IN_PROGRESS',
-  END = 'END',
+  DRAFT = 'DRAFT',
+  AWAITING_CONFIRMATION = 'AWAITING_CONFIRMATION',
+  CONFIRMED = 'CONFIRMED',
+  ARCHIVED = 'ARCHIVED',
 }
 
 export interface Tag {

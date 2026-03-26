@@ -17,8 +17,13 @@ class CandidateWaySectionsRepository(RepositoryAsync):
             return CandidateWaySectionDetailDTO.model_validate(record)
         return None
 
+    async def get_orm_by_id(self, record_id: int):
+        stmt = select(self.model).where(self.model.id == record_id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def update(self, record_id: int, data: SectionUpdateSchema) -> bool:
-        record = await self.get_by_id(record_id)
+        record = await self.get_orm_by_id(record_id)
         if not record:
             return False
 

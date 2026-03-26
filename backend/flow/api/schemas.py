@@ -2,9 +2,9 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from arch.enums import SectionStatusEnum as ArchSectionStatusEnum
 from flow.enums import (
     SectionDecisionEnum,
-    SectionStatusEnum,
     SectionTypeEnum,
     WayDecisionEnum,
     WayStatusEnum,
@@ -14,7 +14,7 @@ from flow.enums import (
 class SectionUpdateSchema(BaseModel):
     name: str | None = None
     type: SectionTypeEnum | None = None
-    status: SectionStatusEnum | None = None
+    status: ArchSectionStatusEnum | None = None
     review: str | None = None
     decision: SectionDecisionEnum | None = None
     sort_order: int | None = None

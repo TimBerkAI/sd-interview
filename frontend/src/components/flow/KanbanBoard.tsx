@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { User, Calendar, Tag, ChevronRight } from 'lucide-react';
 import { api } from '../../services/api';
 import type { CandidateWay } from '../../types';
-import { WayDecision } from '../../types';
+import { WayDecision, SectionStatus } from '../../types';
 import { CandidateWayModal } from './CandidateWayModal';
 
 const COLUMNS: { key: WayDecision; label: string; headerCls: string; dotCls: string }[] = [
@@ -122,7 +122,7 @@ export function KanbanBoard() {
 }
 
 function WayCard({ way, onClick }: { way: CandidateWay; onClick: () => void }) {
-  const completedSections = way.sections.filter((s) => s.status === 'END').length;
+  const completedSections = way.sections.filter((s) => s.status === SectionStatus.CONFIRMED).length;
   const totalSections = way.sections.length;
   const progress = totalSections ? (completedSections / totalSections) * 100 : 0;
 

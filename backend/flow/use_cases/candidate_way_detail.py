@@ -14,4 +14,4 @@ class CandidateWayDetailAsyncUseCase(AsyncUseCase):
         self.way_repo = CandidateWaysRepository(self.session)
 
     async def execute(self):
-        await self.way_repo.get_by_id(self.record_id)
+        return await self.way_repo.get_by_id(self.record_id)

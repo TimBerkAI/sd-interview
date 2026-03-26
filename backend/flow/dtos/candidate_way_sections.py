@@ -1,11 +1,12 @@
+from arch.enums import SectionStatusEnum as ArchSectionStatusEnum
 from core.dtos import BaseDTO
-from flow.enums import SectionDecisionEnum, SectionStatusEnum, SectionTypeEnum
+from flow.enums import SectionDecisionEnum, SectionTypeEnum
 
 
 class SectionSkill(BaseDTO):
     skill: str
-    score: int | None
-    review: str | None
+    score: int | None = None
+    review: str | None = None
 
 
 class CandidateWaySectionDetailDTO(BaseDTO):
@@ -13,8 +14,8 @@ class CandidateWaySectionDetailDTO(BaseDTO):
     way_id: int
     name: str
     type: SectionTypeEnum
-    status: SectionStatusEnum
-    review: str | None
+    status: ArchSectionStatusEnum
+    review: str | None = None
     decision: SectionDecisionEnum
     sort_order: int
-    skill_assessments: list[SectionSkill]
+    skill_assessments: list[SectionSkill] = []

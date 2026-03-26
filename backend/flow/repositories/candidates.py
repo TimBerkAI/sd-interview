@@ -28,5 +28,5 @@ class CandidatesRepository(RepositoryAsync):
         result = await self.session.execute(stmt)
         record = result.scalar_one_or_none()
         if not record:
-            return CandidateDetailDTO.model_validate(record)
-        return None
+            return None
+        return CandidateDetailDTO.model_validate(record)

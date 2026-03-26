@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { X, User, Calendar, Tag, ChevronRight, CheckCircle, Clock, AlertCircle, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
+import { X, User, Calendar, Tag, ChevronRight, CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, ThumbsUp, ThumbsDown, Minus, UserCheck, Loader } from 'lucide-react';
 import type { CandidateWay, WaySection } from '../../types';
 import { SectionDecision, SectionStatus, FlowSectionType, WayDecision } from '../../types';
 import { SectionDetailModal } from './SectionDetailModal';
+import { api } from '../../services/api';
 
 interface CandidateWayModalProps {
   way: CandidateWay;
@@ -18,15 +19,17 @@ const TYPE_CONFIG: Record<string, { label: string; cls: string }> = {
 };
 
 const STATUS_ICONS: Record<string, React.FC<{ className?: string }>> = {
-  [SectionStatus.NEW]: Clock,
-  [SectionStatus.IN_PROGRESS]: AlertCircle,
-  [SectionStatus.END]: CheckCircle,
+  [SectionStatus.DRAFT]: Clock,
+  [SectionStatus.AWAITING_CONFIRMATION]: Loader,
+  [SectionStatus.CONFIRMED]: CheckCircle,
+  [SectionStatus.ARCHIVED]: AlertCircle,
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  [SectionStatus.NEW]: 'text-gray-400',
-  [SectionStatus.IN_PROGRESS]: 'text-blue-500',
-  [SectionStatus.END]: 'text-green-500',
+  [SectionStatus.DRAFT]: 'text-gray-400',
+  [SectionStatus.AWAITING_CONFIRMATION]: 'text-blue-500',
+  [SectionStatus.CONFIRMED]: 'text-green-500',
+  [SectionStatus.ARCHIVED]: 'text-gray-400',
 };
 
 const DECISION_ICONS: Record<string, React.FC<{ className?: string }>> = {
@@ -41,26 +44,58 @@ const DECISION_COLORS: Record<string, string> = {
   [SectionDecision.REFUSE]: 'text-red-500',
 };
 
-const WAY_DECISION_CONFIG: Record<string, { label: string; cls: string }> = {
-  [WayDecision.HIRED]: { label: 'Hired', cls: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800' },
-  [WayDecision.REJECTED]: { label: 'Rejected', cls: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800' },
-  [WayDecision.IN_PROGRESS]: { label: 'In Progress', cls: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800' },
-  [WayDecision.ON_HOLD]: { label: 'On Hold', cls: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' },
+const WAY_DECISION_OPTIONS: { value: WayDecision; label: string; activeCls: string; dotCls: string }[] = [
+  { value: WayDecision.IN_PROGRESS, label: 'In Progress', activeCls: 'bg-blue-600 text-white border-blue-600', dotCls: 'bg-blue-500' },
+  { value: WayDecision.ON_HOLD, label: 'On Hold', activeCls: 'bg-yellow-500 text-white border-yellow-500', dotCls: 'bg-yellow-500' },
+  { value: WayDecision.HIRED, label: 'Hired', activeCls: 'bg-green-600 text-white border-green-600', dotCls: 'bg-green-500' },
+  { value: WayDecision.REJECTED, label: 'Rejected', activeCls: 'bg-red-600 text-white border-red-600', dotCls: 'bg-red-500' },
+];
+
+const DECISION_LABEL: Record<string, string> = {
+  [WayDecision.HIRED]: 'Hired',
+  [WayDecision.REJECTED]: 'Rejected',
+  [WayDecision.IN_PROGRESS]: 'In Progress',
+  [WayDecision.ON_HOLD]: 'On Hold',
+};
+
+const DECISION_BADGE_CLS: Record<string, string> = {
+  [WayDecision.HIRED]: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
+  [WayDecision.REJECTED]: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800',
+  [WayDecision.IN_PROGRESS]: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+  [WayDecision.ON_HOLD]: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
 };
 
 export function CandidateWayModal({ way, onClose, onUpdate }: CandidateWayModalProps) {
   const [sections, setSections] = useState<WaySection[]>(way.sections);
   const [selectedSection, setSelectedSection] = useState<WaySection | null>(null);
+  const [currentDecision, setCurrentDecision] = useState<WayDecision>(way.decision);
+  const [changingDecision, setChangingDecision] = useState(false);
+  const [showDecisionPicker, setShowDecisionPicker] = useState(false);
 
-  const decisionConfig = WAY_DECISION_CONFIG[way.decision] || { label: way.decision, cls: '' };
-
-  const completedCount = sections.filter((s) => s.status === SectionStatus.END).length;
+  const completedCount = sections.filter(
+    (s) => s.status === SectionStatus.CONFIRMED
+  ).length;
 
   const handleSectionSave = (updated: WaySection) => {
     const next = sections.map((s) => (s.id === updated.id ? updated : s));
     setSections(next);
-    onUpdate({ ...way, sections: next });
+    onUpdate({ ...way, sections: next, decision: currentDecision });
     setSelectedSection(null);
+  };
+
+  const handleDecisionChange = async (decision: WayDecision) => {
+    if (decision === currentDecision) {
+      setShowDecisionPicker(false);
+      return;
+    }
+    setChangingDecision(true);
+    const ok = await api.updateWay(way.id, { decision });
+    if (ok) {
+      setCurrentDecision(decision);
+      onUpdate({ ...way, sections, decision });
+    }
+    setChangingDecision(false);
+    setShowDecisionPicker(false);
   };
 
   return (
@@ -71,24 +106,52 @@ export function CandidateWayModal({ way, onClose, onUpdate }: CandidateWayModalP
         <div className="relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
           <div className="flex items-start justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-9 h-9 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
-                  <User className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white leading-tight">
+                  <h3 className="font-semibold text-gray-900 dark:text-white leading-tight text-base">
                     {way.candidate?.full_name || 'Candidate'}
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {way.specialty} — Way #{way.id}
+                    {way.specialty} · Way #{way.id}
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <span className={`text-xs px-2.5 py-1 rounded-lg border font-medium ${decisionConfig.cls}`}>
-                  {decisionConfig.label}
-                </span>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowDecisionPicker((v) => !v)}
+                    disabled={changingDecision}
+                    className={`text-xs px-2.5 py-1 rounded-lg border font-medium transition-all hover:opacity-80 ${DECISION_BADGE_CLS[currentDecision]}`}
+                  >
+                    {changingDecision ? 'Saving...' : DECISION_LABEL[currentDecision] || currentDecision}
+                  </button>
+
+                  {showDecisionPicker && (
+                    <div className="absolute top-full left-0 mt-1 z-10 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl p-1.5 min-w-[160px]">
+                      {WAY_DECISION_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => handleDecisionChange(opt.value)}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all text-left ${
+                            currentDecision === opt.value
+                              ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
+                              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                          }`}
+                        >
+                          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${opt.dotCls}`} />
+                          {opt.label}
+                          {currentDecision === opt.value && (
+                            <UserCheck className="w-3.5 h-3.5 ml-auto text-gray-400" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
                 {way.tags.map((tag) => (
                   <span
@@ -123,7 +186,7 @@ export function CandidateWayModal({ way, onClose, onUpdate }: CandidateWayModalP
               Sections
             </span>
             <span className="text-xs text-gray-400 dark:text-gray-500">
-              {completedCount}/{sections.length} completed
+              {completedCount}/{sections.length} confirmed
             </span>
           </div>
 
@@ -133,46 +196,69 @@ export function CandidateWayModal({ way, onClose, onUpdate }: CandidateWayModalP
                 No sections
               </div>
             ) : (
-              sections.map((section) => {
-                const StatusIcon = STATUS_ICONS[section.status] || Clock;
-                const DecisionIcon = DECISION_ICONS[section.decision] || Minus;
-                const typeConfig = TYPE_CONFIG[section.type] || { label: section.type, cls: 'bg-gray-100 text-gray-600' };
+              sections
+                .slice()
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map((section) => {
+                  const StatusIcon = STATUS_ICONS[section.status] || Clock;
+                  const DecisionIcon = DECISION_ICONS[section.decision] || Minus;
+                  const typeConfig = TYPE_CONFIG[section.type] || { label: section.type, cls: 'bg-gray-100 text-gray-600' };
 
-                return (
-                  <button
-                    key={section.id}
-                    onClick={() => setSelectedSection(section)}
-                    className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 transition-all text-left group"
-                  >
-                    <StatusIcon className={`w-4 h-4 flex-shrink-0 ${STATUS_COLORS[section.status]}`} />
+                  return (
+                    <button
+                      key={section.id}
+                      onClick={() => setSelectedSection(section)}
+                      className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 transition-all text-left group"
+                    >
+                      <StatusIcon className={`w-4 h-4 flex-shrink-0 ${STATUS_COLORS[section.status] || 'text-gray-400'}`} />
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                          {section.name}
-                        </span>
-                        <span className={`text-xs px-2 py-0.5 rounded-md font-medium flex-shrink-0 ${typeConfig.cls}`}>
-                          {typeConfig.label}
-                        </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            {section.name}
+                          </span>
+                          <span className={`text-xs px-2 py-0.5 rounded-md font-medium flex-shrink-0 ${typeConfig.cls}`}>
+                            {typeConfig.label}
+                          </span>
+                        </div>
+                        {section.review && (
+                          <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                            {section.review.replace(/<[^>]*>/g, '')}
+                          </p>
+                        )}
+                        {section.skill_assessments && section.skill_assessments.length > 0 && (
+                          <div className="flex items-center gap-1.5 mt-1">
+                            {section.skill_assessments.slice(0, 3).map((sa, i) => (
+                              <span key={i} className="text-xs text-gray-400 dark:text-gray-500">
+                                {sa.skill}{sa.score != null ? ` ${sa.score}/5` : ''}
+                              </span>
+                            ))}
+                            {section.skill_assessments.length > 3 && (
+                              <span className="text-xs text-gray-300 dark:text-gray-600">
+                                +{section.skill_assessments.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      {section.review && (
-                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
-                          {section.review.replace(/<[^>]*>/g, '')}
-                        </p>
-                      )}
-                    </div>
 
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <DecisionIcon className={`w-4 h-4 ${DECISION_COLORS[section.decision]}`} />
-                      <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-gray-500 dark:group-hover:text-gray-400 transition-colors" />
-                    </div>
-                  </button>
-                );
-              })
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <DecisionIcon className={`w-4 h-4 ${DECISION_COLORS[section.decision]}`} />
+                        <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-gray-500 dark:group-hover:text-gray-400 transition-colors" />
+                      </div>
+                    </button>
+                  );
+                })
             )}
           </div>
 
           <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs text-gray-400 dark:text-gray-500">Interview progress</span>
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                {sections.length ? Math.round((completedCount / sections.length) * 100) : 0}%
+              </span>
+            </div>
             <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1.5">
               <div
                 className="bg-gray-900 dark:bg-white h-1.5 rounded-full transition-all duration-500"

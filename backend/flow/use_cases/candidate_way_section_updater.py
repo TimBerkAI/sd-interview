@@ -17,4 +17,4 @@ class CandidateWaySectionUpdaterAsyncUseCase(AsyncUseCase):
         self.section_repo = CandidateWaySectionsRepository(self.session)
 
     async def execute(self):
-        await self.section_repo.update(self.record_id, self.data)
+        return await self.section_repo.update(self.record_id, self.data)

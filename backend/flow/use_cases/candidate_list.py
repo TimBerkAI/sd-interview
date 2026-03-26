@@ -12,4 +12,4 @@ class CandidateListAsyncUseCase(AsyncUseCase):
         self.candidate_repo = CandidatesRepository(self.session)
 
     async def execute(self):
-        await self.candidate_repo.get_list()
+        return await self.candidate_repo.get_list()

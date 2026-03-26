@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Save, CheckCircle, Clock, AlertCircle, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
+import { X, Save, CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, Archive, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { api } from '../../services/api';
 import type { WaySection } from '../../types';
 import { SectionDecision, SectionStatus, FlowSectionType } from '../../types';
@@ -18,9 +18,10 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const STATUS_OPTIONS = [
-  { value: SectionStatus.NEW, label: 'New', icon: Clock, cls: 'text-gray-500' },
-  { value: SectionStatus.IN_PROGRESS, label: 'In Progress', icon: AlertCircle, cls: 'text-blue-500' },
-  { value: SectionStatus.END, label: 'Completed', icon: CheckCircle, cls: 'text-green-500' },
+  { value: SectionStatus.DRAFT, label: 'Draft', icon: Clock, cls: 'text-gray-500' },
+  { value: SectionStatus.AWAITING_CONFIRMATION, label: 'Awaiting', icon: AlertCircle, cls: 'text-blue-500' },
+  { value: SectionStatus.CONFIRMED, label: 'Confirmed', icon: CheckCircle, cls: 'text-green-500' },
+  { value: SectionStatus.ARCHIVED, label: 'Archived', icon: Archive, cls: 'text-gray-400' },
 ];
 
 const DECISION_OPTIONS = [
@@ -33,13 +34,20 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
   const [review, setReview] = useState(section.review || '');
   const [status, setStatus] = useState(section.status);
   const [decision, setDecision] = useState(section.decision);
+  const [skillAssessments, setSkillAssessments] = useState(section.skill_assessments || []);
   const [saving, setSaving] = useState(false);
+
+  const handleScoreChange = (index: number, score: number) => {
+    setSkillAssessments((prev) =>
+      prev.map((sa, i) => (i === index ? { ...sa, score } : sa))
+    );
+  };
 
   const handleSave = async () => {
     setSaving(true);
-    const ok = await api.updateSection(section.id, { review, status, decision });
+    const ok = await api.updateSection(section.id, { review, status, decision, skill_assessments: skillAssessments });
     if (ok) {
-      onSave({ ...section, review, status, decision });
+      onSave({ ...section, review, status, decision, skill_assessments: skillAssessments });
     }
     setSaving(false);
   };
@@ -115,33 +123,36 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
             </div>
           </div>
 
-          {section.skill_assessments && section.skill_assessments.length > 0 && (
+          {skillAssessments.length > 0 && (
             <div>
               <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
                 Skill Assessments
               </label>
               <div className="space-y-2">
-                {section.skill_assessments.map((sa, i) => (
+                {skillAssessments.map((sa, i) => (
                   <div
                     key={i}
                     className="flex items-center justify-between px-3 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl"
                   >
                     <span className="text-sm text-gray-700 dark:text-gray-300">{sa.skill}</span>
                     <div className="flex items-center gap-2">
-                      <div className="flex gap-0.5">
+                      <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map((s) => (
-                          <div
+                          <button
                             key={s}
-                            className={`w-2.5 h-2.5 rounded-full ${
-                              s <= sa.score
-                                ? 'bg-gray-900 dark:bg-white'
-                                : 'bg-gray-200 dark:bg-gray-700'
+                            onClick={() => handleScoreChange(i, s)}
+                            className={`w-6 h-6 rounded-md text-xs font-semibold transition-all ${
+                              sa.score != null && s <= sa.score
+                                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                                : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 hover:bg-gray-300 dark:hover:bg-gray-600'
                             }`}
-                          />
+                          >
+                            {s}
+                          </button>
                         ))}
                       </div>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 w-6 text-right">
-                        {sa.score}/5
+                      <span className="text-xs text-gray-400 dark:text-gray-500 w-8 text-right">
+                        {sa.score != null ? `${sa.score}/5` : '—/5'}
                       </span>
                     </div>
                   </div>

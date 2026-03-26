@@ -13,9 +13,9 @@ class CandidateLink(BaseDTO):
 class CandidateListDTO(BaseDTO):
     id: int
     full_name: str
-    description: str
+    description: str | None = None
     specialty: SpecialityEnum
-    links: list[CandidateLink]
+    links: list[CandidateLink] = []
     created_at: datetime
 
 

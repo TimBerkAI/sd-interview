@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING, Any
 
+from settings.db import Base
 from sqlalchemy import CheckConstraint, ForeignKey, Integer, String, Text
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from arch.enums import SectionTypeEnum
-from settings.db import Base
 
 if TYPE_CHECKING:
     from arch.models import Templates
@@ -31,7 +31,7 @@ class Sections(Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     type: Mapped[SectionTypeEnum] = mapped_column(
-        SAEnum(SectionTypeEnum, name='section_type'),
+        SAEnum(SectionTypeEnum, name='arch_section_type'),
         nullable=False,
     )
     # [{"score": 1, "comment": "..."}, ..., {"score": 5, "comment": "..."}]

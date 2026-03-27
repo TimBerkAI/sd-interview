@@ -34,7 +34,7 @@ def upgrade() -> None:
         sa.Column('reviewer_token', sa.String(length=64), nullable=False),
         sa.Column(
             'status',
-            sa.Enum('PENDING', 'ACTIVE', 'COMPLETED', 'CANCELLED', name='room_status'),
+            sa.Enum('PENDING', 'ACTIVE', 'COMPLETED', 'CANCELLED', name='arch_room_status'),
             nullable=False,
         ),
         sa.ForeignKeyConstraint(['task_id'], ['tasks.id'], ondelete='RESTRICT'),
@@ -73,5 +73,5 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_rooms_task_id'), table_name='rooms')
     op.drop_table('rooms')
     # Удаляем enum-типы — они не удаляются автоматически
-    op.execute('DROP TYPE IF EXISTS room_status')
+    op.execute('DROP TYPE IF EXISTS arch_room_status')
     # ### end Alembic commands ###

@@ -37,13 +37,13 @@ def upgrade() -> None:
         INSERT INTO tasks (id, name, slug, description, status) VALUES
         (1, 'Проектирование URL Shortener', 'url-shortener',
          'Спроектируй сервис сокращения ссылок (аналог bit.ly).',
-         'CONFIRMED'::task_status),
+         'CONFIRMED'::arch_task_status),
         (2, 'Проектирование ленты новостей', 'news-feed',
          'Спроектируй систему формирования ленты новостей (аналог Twitter Feed).',
-         'CONFIRMED'::task_status),
+         'CONFIRMED'::arch_task_status),
         (3, 'Проектирование системы чатов', 'chat-system',
          'Спроектируй real-time систему обмена сообщениями (аналог Telegram).',
-         'CONFIRMED'::task_status)
+         'CONFIRMED'::arch_task_status)
         ON CONFLICT (id) DO NOTHING
     """)
     )
@@ -52,7 +52,7 @@ def upgrade() -> None:
     conn.execute(
         sa.text("""
         INSERT INTO templates (id, name, specialty, status) VALUES
-        (1, 'Backend System Design — Base', 'BE'::specialty, 'CONFIRMED'::template_status)
+        (1, 'Backend System Design — Base', 'BE'::arch_specialty, 'CONFIRMED'::arch_template_status)
         ON CONFLICT (id) DO NOTHING
     """)
     )
@@ -62,13 +62,13 @@ def upgrade() -> None:
     conn.execute(
         sa.text("""
         INSERT INTO sections (id, template_id, name, description, "order", type, score_scale) VALUES
-        (1, 1, 'Требования',        'Функциональные и нефункциональные требования. DAU/MAU, RPS.', 1, 'REQUIREMENTS'::section_type,  :score),
-        (2, 1, 'Расчёты нагрузки', 'Back-of-the-envelope: RPS, bandwidth, storage.',               2, 'CALCULATION'::section_type,  :score),
-        (3, 1, 'API Design',        'Ключевые эндпоинты: метод, путь, параметры, ответ.',          3, 'API'::section_type,           :score),
-        (4, 1, 'Модель данных',     'Схема БД. Выбор хранилища (SQL/NoSQL/Cache).',                4, 'DATA_MODEL'::section_type,    :score),
-        (5, 1, 'HLD',               'Компонентная схема. Основные сервисы и взаимодействие.',      5, 'HLD'::section_type,           :score),
-        (6, 1, 'LLD',               'Детальное описание компонентов: алгоритмы, структуры данных.',6, 'LLD'::section_type,           :score),
-        (7, 1, 'Риски',             'SPOF, bottleneck-и, стратегии масштабирования.',              7, 'RISKS'::section_type,         :score)
+        (1, 1, 'Требования',        'Функциональные и нефункциональные требования. DAU/MAU, RPS.', 1, 'REQUIREMENTS'::arch_section_type,  :score),
+        (2, 1, 'Расчёты нагрузки', 'Back-of-the-envelope: RPS, bandwidth, storage.',               2, 'CALCULATION'::arch_section_type,  :score),
+        (3, 1, 'API Design',        'Ключевые эндпоинты: метод, путь, параметры, ответ.',          3, 'API'::arch_section_type,           :score),
+        (4, 1, 'Модель данных',     'Схема БД. Выбор хранилища (SQL/NoSQL/Cache).',                4, 'DATA_MODEL'::arch_section_type,    :score),
+        (5, 1, 'HLD',               'Компонентная схема. Основные сервисы и взаимодействие.',      5, 'HLD'::arch_section_type,           :score),
+        (6, 1, 'LLD',               'Детальное описание компонентов: алгоритмы, структуры данных.',6, 'LLD'::arch_section_type,           :score),
+        (7, 1, 'Риски',             'SPOF, bottleneck-и, стратегии масштабирования.',              7, 'RISKS'::arch_section_type,         :score)
         ON CONFLICT (id) DO NOTHING
     """),
         {'score': score_json},
@@ -80,7 +80,7 @@ def upgrade() -> None:
         INSERT INTO public.rooms
         (id, "name", task_id, template_id, started_at, ended_at, candidate_token, reviewer_token, status)
         VALUES
-        (1, 'Test', 1, 1, now(), now(), 'candidate_demo_token_12345', 'reviewer_demo_token_67890', 'PENDING'::room_status)
+        (1, 'Test', 1, 1, now(), now(), 'candidate_demo_token_12345', 'reviewer_demo_token_67890', 'PENDING'::arch_room_status)
         ON CONFLICT (id) DO NOTHING
     """)
     )
@@ -90,18 +90,20 @@ def upgrade() -> None:
         sa.text("""
         INSERT INTO public.room_answers (id, room_id, section_id, section_order) VALUES
         (1, 1, 1, 1),
-        (1, 1, 2, 2),
-        (1, 1, 3, 3),
-        (1, 1, 4, 4),
-        (1, 1, 5, 5),
-        (1, 1, 6, 6),
-        (1, 1, 7, 7)
+        (2, 1, 2, 2),
+        (3, 1, 3, 3),
+        (4, 1, 4, 4),
+        (5, 1, 5, 5),
+        (6, 1, 6, 6),
+        (7, 1, 7, 7)
         ON CONFLICT (id) DO NOTHING
     """)
     )
 
 
 def downgrade() -> None:
+    op.execute('TRUNCATE room_answers RESTART IDENTITY CASCADE')
+    op.execute('TRUNCATE rooms RESTART IDENTITY CASCADE')
     op.execute('TRUNCATE sections RESTART IDENTITY CASCADE')
     op.execute('TRUNCATE templates RESTART IDENTITY CASCADE')
     op.execute('TRUNCATE tasks RESTART IDENTITY CASCADE')

@@ -1,12 +1,11 @@
 from datetime import date, datetime
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, UniqueConstraint, func
-from sqlalchemy import Enum as SAEnum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from core.enums import SpecialityEnum
 from flow.enums import WayDecisionEnum, WayStatusEnum
 from settings.db import Base
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, UniqueConstraint, func
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class CandidateWays(Base):
@@ -16,15 +15,15 @@ class CandidateWays(Base):
     candidate_id: Mapped[int] = mapped_column(ForeignKey('candidates.id', ondelete='CASCADE'), nullable=False)
     period_start: Mapped[date] = mapped_column(Date, server_default=func.current_date())
     period_end: Mapped[date | None] = mapped_column(Date)
-    specialty: Mapped[SpecialityEnum] = mapped_column(SAEnum(SpecialityEnum, name='way_specialty'), nullable=False)
+    specialty: Mapped[SpecialityEnum] = mapped_column(SAEnum(SpecialityEnum, name='flow_way_specialty'), nullable=False)
     decision: Mapped[WayDecisionEnum] = mapped_column(
-        SAEnum(WayDecisionEnum, name='way_decision'),
+        SAEnum(WayDecisionEnum, name='flow_way_decision'),
         nullable=False,
         default=WayDecisionEnum.IN_PROGRESS,
         server_default=WayDecisionEnum.IN_PROGRESS,
     )
     status: Mapped[WayStatusEnum] = mapped_column(
-        SAEnum(WayStatusEnum, name='way_status'),
+        SAEnum(WayStatusEnum, name='flow_way_status'),
         nullable=False,
         default=WayStatusEnum.ACTIVE,
         server_default=WayStatusEnum.ACTIVE,

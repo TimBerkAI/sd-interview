@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X, User, Calendar, Tag, ChevronRight, CheckCircle, Clock, ThumbsUp, ThumbsDown, Minus, UserCheck, Loader } from 'lucide-react';
 import type { CandidateWay, WaySection } from '../../types';
-import { SectionDecision, SectionStatus, FlowSectionType, WayDecision, WaySectionStatus } from '../../types';
+import { SectionDecision, FlowSectionType, WayDecision, WaySectionStatus } from '../../types';
 import { SectionDetailModal } from './SectionDetailModal';
 import { api } from '../../services/api';
 
@@ -71,7 +71,7 @@ export function CandidateWayModal({ way, onClose, onUpdate }: CandidateWayModalP
   const [showDecisionPicker, setShowDecisionPicker] = useState(false);
 
   const completedCount = sections.filter(
-    (s) => s.status === SectionStatus.CONFIRMED
+    (s) => s.status === WaySectionStatus.END
   ).length;
 
   const handleSectionSave = (updated: WaySection) => {

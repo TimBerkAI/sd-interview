@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { X, Save, CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, Archive, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
+import { X, Save, CheckCircle, Clock, AlertCircle, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { api } from '../../services/api';
 import type { WaySection } from '../../types';
-import { SectionDecision, SectionStatus, FlowSectionType } from '../../types';
+import { SectionDecision, WaySectionStatus, FlowSectionType } from '../../types';
 
 interface SectionDetailModalProps {
   section: WaySection;
@@ -18,10 +18,9 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const STATUS_OPTIONS = [
-  { value: SectionStatus.DRAFT, label: 'Draft', icon: Clock, cls: 'text-gray-500' },
-  { value: SectionStatus.AWAITING_CONFIRMATION, label: 'Awaiting', icon: AlertCircle, cls: 'text-blue-500' },
-  { value: SectionStatus.CONFIRMED, label: 'Confirmed', icon: CheckCircle, cls: 'text-green-500' },
-  { value: SectionStatus.ARCHIVED, label: 'Archived', icon: Archive, cls: 'text-gray-400' },
+  { value: WaySectionStatus.NEW, label: 'Draft', icon: Clock, cls: 'text-gray-500' },
+  { value: WaySectionStatus.IN_PROGRESS, label: 'Awaiting', icon: AlertCircle, cls: 'text-blue-500' },
+  { value: WaySectionStatus.END, label: 'Confirmed', icon: CheckCircle, cls: 'text-green-500' },
 ];
 
 const DECISION_OPTIONS = [
@@ -32,7 +31,7 @@ const DECISION_OPTIONS = [
 
 export function SectionDetailModal({ section, onClose, onSave }: SectionDetailModalProps) {
   const [review, setReview] = useState(section.review || '');
-  const [status, setStatus] = useState<SectionStatus>(section.status);
+  const [status, setStatus] = useState<WaySectionStatus>(section.status);
   const [decision, setDecision] = useState(section.decision);
   const [skillAssessments, setSkillAssessments] = useState(section.skill_assessments || []);
   const [saving, setSaving] = useState(false);
@@ -75,16 +74,16 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
         <div className="flex-1 overflow-y-auto p-6 space-y-5">
           <div>
             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-              Status
+              Статус
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex gap-2">
               {STATUS_OPTIONS.map((opt) => {
                 const Icon = opt.icon;
                 return (
                   <button
                     key={opt.value}
                     onClick={() => setStatus(opt.value)}
-                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm font-medium transition-all ${
                       status === opt.value
                         ? 'bg-gray-900 dark:bg-white border-gray-900 dark:border-white text-white dark:text-gray-900'
                         : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
@@ -100,7 +99,7 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
 
           <div>
             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-              Decision
+              Решение
             </label>
             <div className="flex gap-2">
               {DECISION_OPTIONS.map((opt) => {
@@ -126,7 +125,7 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
           {skillAssessments.length > 0 && (
             <div>
               <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-                Skill Assessments
+                Навыки
               </label>
               <div className="space-y-2">
                 {skillAssessments.map((sa, i) => (
@@ -163,12 +162,12 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
 
           <div>
             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-              Review Notes
+              Отзыв
             </label>
             <textarea
               value={review}
               onChange={(e) => setReview(e.target.value)}
-              placeholder="Add review notes..."
+              placeholder="Добавьте отзыв..."
               rows={6}
               className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-white/20 resize-none"
             />
@@ -180,7 +179,7 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
-            Cancel
+            Отмена
           </button>
           <button
             onClick={handleSave}
@@ -188,7 +187,7 @@ export function SectionDetailModal({ section, onClose, onSave }: SectionDetailMo
             className="flex items-center gap-2 px-5 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-all"
           >
             <Save className="w-3.5 h-3.5" />
-            {saving ? 'Saving...' : 'Save'}
+            {saving ? 'Сохранение...' : 'Сохранить'}
           </button>
         </div>
       </div>

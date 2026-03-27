@@ -8,16 +8,16 @@ import { WayDecision, WayStatus } from '../../types';
 type CandidateWithWays = Candidate & { ways: CandidateWay[] };
 
 const DECISION_CONFIG: Record<string, { label: string; cls: string }> = {
-  [WayDecision.HIRED]: { label: 'Hired', cls: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' },
-  [WayDecision.REJECTED]: { label: 'Rejected', cls: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' },
-  [WayDecision.IN_PROGRESS]: { label: 'In Progress', cls: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' },
-  [WayDecision.ON_HOLD]: { label: 'On Hold', cls: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' },
+  [WayDecision.HIRED]: { label: 'Нанят', cls: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' },
+  [WayDecision.REJECTED]: { label: 'Отклонено', cls: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' },
+  [WayDecision.IN_PROGRESS]: { label: 'В процессе', cls: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' },
+  [WayDecision.ON_HOLD]: { label: 'Резерв', cls: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' },
 };
 
 const STATUS_CONFIG: Record<string, { label: string; cls: string }> = {
-  [WayStatus.ACTIVE]: { label: 'Active', cls: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' },
-  [WayStatus.COMPLETED]: { label: 'Completed', cls: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400' },
-  [WayStatus.CANCELLED]: { label: 'Cancelled', cls: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' },
+  [WayStatus.ACTIVE]: { label: 'Активный', cls: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' },
+  [WayStatus.COMPLETED]: { label: 'Завершённый', cls: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400' },
+  [WayStatus.CANCELLED]: { label: 'Отменённый', cls: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' },
 };
 
 export function CandidateDetailPage() {
@@ -44,7 +44,7 @@ export function CandidateDetailPage() {
   if (!candidate) {
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        Candidate not found
+        Кандидат не найден
       </div>
     );
   }
@@ -56,7 +56,7 @@ export function CandidateDetailPage() {
         className="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        Back to Candidates
+        Вернуться к кандидатам
       </Link>
 
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 mb-6">
@@ -111,11 +111,11 @@ export function CandidateDetailPage() {
       <div>
         <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <KanbanSquare className="w-4 h-4" />
-          Interview Ways ({candidate.ways.length})
+          Пути ({candidate.ways.length})
         </h2>
 
         {candidate.ways.length === 0 ? (
-          <p className="text-sm text-gray-400 dark:text-gray-500">No interview ways yet</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">Пока нет данных</p>
         ) : (
           <div className="space-y-3">
             {candidate.ways.map((way) => {
@@ -129,7 +129,7 @@ export function CandidateDetailPage() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {way.specialty} — Way #{way.id}
+                      {way.specialty}
                     </span>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${status.cls}`}>

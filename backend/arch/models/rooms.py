@@ -2,12 +2,12 @@ import secrets
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from settings.db import Base
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from arch.enums import RoomStatusEnum
-from settings.db import Base
 
 if TYPE_CHECKING:
     from arch.models import RoomAnswers, Tasks, Templates
@@ -43,7 +43,7 @@ class Rooms(Base):
     )
 
     status: Mapped[RoomStatusEnum] = mapped_column(
-        SAEnum(RoomStatusEnum, name='room_status'),
+        SAEnum(RoomStatusEnum, name='arch_room_status'),
         nullable=False,
         default=RoomStatusEnum.PENDING,
     )

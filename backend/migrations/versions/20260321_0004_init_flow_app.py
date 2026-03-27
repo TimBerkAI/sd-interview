@@ -29,7 +29,7 @@ def upgrade() -> None:
         sa.Column('description', sa.Text(), nullable=True),
         sa.Column(
             'specialty',
-            sa.Enum('BE', 'FE', 'QA', 'MOB', 'DEVOPS', name='candidate_specialty'),
+            sa.Enum('BE', 'FE', 'QA', 'MOB', 'DEVOPS', name='flow_candidate_specialty'),
             nullable=False,
         ),
         sa.Column('links', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
@@ -57,18 +57,18 @@ def upgrade() -> None:
         sa.Column('period_end', sa.Date(), nullable=True),
         sa.Column(
             'specialty',
-            sa.Enum('BE', 'FE', 'QA', 'MOB', 'DEVOPS', name='way_specialty'),
+            sa.Enum('BE', 'FE', 'QA', 'MOB', 'DEVOPS', name='flow_way_specialty'),
             nullable=False,
         ),
         sa.Column(
             'decision',
-            sa.Enum('HIRED', 'REJECTED', 'IN_PROGRESS', 'ON_HOLD', name='way_decision'),
+            sa.Enum('HIRED', 'REJECTED', 'IN_PROGRESS', 'ON_HOLD', name='flow_way_decision'),
             server_default='IN_PROGRESS',
             nullable=False,
         ),
         sa.Column(
             'status',
-            sa.Enum('ACTIVE', 'COMPLETED', 'CANCELLED', name='way_status'),
+            sa.Enum('ACTIVE', 'COMPLETED', 'CANCELLED', name='flow_way_status'),
             server_default='ACTIVE',
             nullable=False,
         ),
@@ -83,7 +83,7 @@ def upgrade() -> None:
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column(
             'type',
-            sa.Enum('HR', 'TECH', 'SD', 'TEAM', name='way_section_type'),
+            sa.Enum('HR', 'TECH', 'SD', 'TEAM', name='flow_way_section_type'),
             server_default='HR',
             nullable=False,
         ),
@@ -93,7 +93,7 @@ def upgrade() -> None:
                 'NEW',
                 'IN_PROGRESS',
                 'END',
-                name='way_section_status',
+                name='flow_way_section_status',
             ),
             server_default='NEW',
             nullable=False,
@@ -101,7 +101,7 @@ def upgrade() -> None:
         sa.Column('review', sa.Text(), nullable=True),
         sa.Column(
             'decision',
-            sa.Enum('REFUSE', 'RECOMMENDED', 'PENDING', name='way_section_decision'),
+            sa.Enum('REFUSE', 'RECOMMENDED', 'PENDING', name='flow_way_section_decision'),
             server_default='PENDING',
             nullable=False,
         ),
@@ -132,11 +132,11 @@ def downgrade() -> None:
     op.drop_table('tags')
     op.drop_table('candidates')
     # Удаляем enum-типы — они не удаляются автоматически
-    op.execute('DROP TYPE IF EXISTS way_section_decision')
-    op.execute('DROP TYPE IF EXISTS way_section_status')
-    op.execute('DROP TYPE IF EXISTS way_section_type')
-    op.execute('DROP TYPE IF EXISTS way_decision')
-    op.execute('DROP TYPE IF EXISTS way_status')
-    op.execute('DROP TYPE IF EXISTS way_specialty')
-    op.execute('DROP TYPE IF EXISTS candidate_specialty')
+    op.execute('DROP TYPE IF EXISTS flow_way_section_decision')
+    op.execute('DROP TYPE IF EXISTS flow_way_section_status')
+    op.execute('DROP TYPE IF EXISTS flow_way_section_type')
+    op.execute('DROP TYPE IF EXISTS flow_way_decision')
+    op.execute('DROP TYPE IF EXISTS flow_way_status')
+    op.execute('DROP TYPE IF EXISTS flow_way_specialty')
+    op.execute('DROP TYPE IF EXISTS flow_candidate_specialty')
     # ### end Alembic commands ###

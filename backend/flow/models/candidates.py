@@ -1,13 +1,12 @@
 import typing as t
 from datetime import datetime
 
+from core.enums import SpecialityEnum
+from settings.db import Base
 from sqlalchemy import DateTime, Integer, String, Text, func
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from core.enums import SpecialityEnum
-from settings.db import Base
 
 
 class Candidates(Base):
@@ -17,7 +16,7 @@ class Candidates(Base):
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     specialty: Mapped[SpecialityEnum] = mapped_column(
-        SAEnum(SpecialityEnum, name='candidate_specialty'), nullable=False
+        SAEnum(SpecialityEnum, name='flow_candidate_specialty'), nullable=False
     )
     links: Mapped[list[dict[str, t.Any]]] = mapped_column(
         JSONB,

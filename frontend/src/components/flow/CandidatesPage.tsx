@@ -78,7 +78,7 @@ export function CandidatesPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Candidates</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Кандидаты</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
           {filtered.length} of {candidates.length} candidate{candidates.length !== 1 ? 's' : ''}
         </p>

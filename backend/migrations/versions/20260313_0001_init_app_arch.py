@@ -35,7 +35,7 @@ def upgrade() -> None:
                 'AWAITING_CONFIRMATION',
                 'CONFIRMED',
                 'ARCHIVED',
-                name='task_status',
+                name='arch_task_status',
             ),
             nullable=False,
         ),
@@ -48,7 +48,7 @@ def upgrade() -> None:
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column(
             'specialty',
-            sa.Enum('BE', 'FE', 'QA', 'MOB', 'DEVOPS', name='specialty'),
+            sa.Enum('BE', 'FE', 'QA', 'MOB', 'DEVOPS', name='arch_specialty'),
             nullable=False,
         ),
         sa.Column(
@@ -58,7 +58,7 @@ def upgrade() -> None:
                 'AWAITING_CONFIRMATION',
                 'CONFIRMED',
                 'ARCHIVED',
-                name='template_status',
+                name='arch_template_status',
             ),
             nullable=False,
         ),
@@ -81,7 +81,7 @@ def upgrade() -> None:
                 'HLD',
                 'LLD',
                 'RISKS',
-                name='section_type',
+                name='arch_section_type',
             ),
             nullable=False,
         ),
@@ -106,8 +106,8 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_tasks_slug'), table_name='tasks')
     op.drop_table('tasks')
     # Удаляем enum-типы — они не удаляются автоматически
-    op.execute('DROP TYPE IF EXISTS task_status')
-    op.execute('DROP TYPE IF EXISTS specialty')
-    op.execute('DROP TYPE IF EXISTS template_status')
-    op.execute('DROP TYPE IF EXISTS section_type')
+    op.execute('DROP TYPE IF EXISTS arch_task_status')
+    op.execute('DROP TYPE IF EXISTS arch_specialty')
+    op.execute('DROP TYPE IF EXISTS arch_template_status')
+    op.execute('DROP TYPE IF EXISTS arch_section_type')
     # ### end Alembic commands ###

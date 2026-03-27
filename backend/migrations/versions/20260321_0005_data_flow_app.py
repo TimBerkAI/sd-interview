@@ -27,7 +27,7 @@ candidates_table = table(
     column('id', Integer),
     column('full_name', String),
     column('description', Text),
-    column('specialty', SAEnum(name='candidate_specialty')),
+    column('specialty', SAEnum(name='flow_candidate_specialty')),
     column('links', JSONB),
     column('created_at', DateTime),
 )
@@ -38,9 +38,9 @@ candidate_ways_table = table(
     column('candidate_id', Integer),
     column('period_start', Date),
     column('period_end', Date),
-    column('specialty', SAEnum(name='way_specialty')),
-    column('decision', SAEnum(name='way_decision')),
-    column('status', SAEnum(name='way_status')),
+    column('specialty', SAEnum(name='flow_way_specialty')),
+    column('decision', SAEnum(name='flow_way_decision')),
+    column('status', SAEnum(name='flow_way_status')),
     column('created_at', DateTime),
     # tags колонки нет — вынесена в отдельную таблицу
 )
@@ -50,10 +50,10 @@ candidate_way_sections_table = table(
     column('id', Integer),
     column('way_id', Integer),
     column('name', String),
-    column('type', SAEnum(name='way_section_type')),
-    column('status', SAEnum(name='way_section_status')),
+    column('type', SAEnum(name='flow_way_section_type')),
+    column('status', SAEnum(name='flow_way_section_status')),
     column('review', Text),
-    column('decision', SAEnum(name='way_section_decision')),
+    column('decision', SAEnum(name='flow_way_section_decision')),
     column('sort_order', Integer),
     column('skill_assessments', JSONB),
 )

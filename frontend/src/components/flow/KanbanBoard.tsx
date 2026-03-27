@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { User, Calendar, Tag, ChevronRight } from 'lucide-react';
 import { api } from '../../services/api';
 import type { CandidateWay } from '../../types';
-import { WayDecision, SectionStatus } from '../../types';
+import { WayDecision, WaySectionStatus } from '../../types';
 import { CandidateWayModal } from './CandidateWayModal';
 
 const COLUMNS: { key: WayDecision; label: string; headerCls: string; dotCls: string; dropCls: string }[] = [
@@ -192,7 +192,7 @@ interface WayCardProps {
 }
 
 function WayCard({ way, isDragging, onClick, onDragStart, onDragEnd }: WayCardProps) {
-  const completedSections = way.sections.filter((s) => s.status === SectionStatus.CONFIRMED).length;
+  const completedSections = way.sections.filter((s) => s.status === WaySectionStatus.END).length;
   const totalSections = way.sections.length;
   const progress = totalSections ? (completedSections / totalSections) * 100 : 0;
 

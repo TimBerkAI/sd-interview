@@ -1,35 +1,35 @@
 from sqladmin import ModelView
 from wtforms import validators
 
-from arch.models import RoomAnswers
+from arch.models import ArchRoomAnswers
 from core.fields.ckeditor import CKEditorField
 
 
-class RoomAnswerAdmin(ModelView, model=RoomAnswers):
+class ArchRoomAnswerAdmin(ModelView, model=ArchRoomAnswers):
     name = 'Ответ'
     name_plural = 'Ответы'
     icon = 'fa-solid fa-pen-to-square'
 
     column_list = [
-        RoomAnswers.id,
-        RoomAnswers.room_id,
-        RoomAnswers.section_id,
-        RoomAnswers.section_order,
-        RoomAnswers.mark,
+        ArchRoomAnswers.id,
+        ArchRoomAnswers.room_id,
+        ArchRoomAnswers.section_id,
+        ArchRoomAnswers.section_order,
+        ArchRoomAnswers.mark,
     ]
     column_sortable_list = [
-        RoomAnswers.id,
-        RoomAnswers.room_id,
-        RoomAnswers.section_order,
-        RoomAnswers.mark,
+        ArchRoomAnswers.id,
+        ArchRoomAnswers.room_id,
+        ArchRoomAnswers.section_order,
+        ArchRoomAnswers.mark,
     ]
 
     form_columns = [
-        RoomAnswers.room,
-        RoomAnswers.section,
-        RoomAnswers.candidate_answer,
-        RoomAnswers.reviewer_comment,
-        RoomAnswers.mark,
+        ArchRoomAnswers.room,
+        ArchRoomAnswers.section,
+        ArchRoomAnswers.candidate_answer,
+        ArchRoomAnswers.reviewer_comment,
+        ArchRoomAnswers.mark,
     ]
     form_overrides = {
         'candidate_answer': CKEditorField,

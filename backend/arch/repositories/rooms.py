@@ -3,12 +3,12 @@ from sqlalchemy.orm import joinedload, selectinload
 
 from arch.dtos.rooms import RoomCreateDTO, RoomWithAnswersDTO
 from arch.enums import RoomStatusEnum
-from arch.models import RoomAnswers, Rooms
+from arch.models import ArchRoomAnswers, ArchRooms
 from core.use_cases.async_base import RepositoryAsync
 
 
 class RoomsRepository(RepositoryAsync):
-    model = Rooms
+    model = ArchRooms
 
     async def create(self, data: RoomCreateDTO) -> int:
         """Создание комнаты"""
@@ -36,7 +36,7 @@ class RoomsRepository(RepositoryAsync):
             .options(
                 joinedload(self.model.task),
                 joinedload(self.model.template),
-                selectinload(self.model.answers).joinedload(RoomAnswers.section),
+                selectinload(self.model.answers).joinedload(ArchRoomAnswers.section),
             )
         )
         record = result.unique().scalar_one_or_none()

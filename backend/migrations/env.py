@@ -6,11 +6,11 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from arch.models import Sections, Tasks, Templates  # noqa
-from core.models import Tags  # noqa
-from flow.models import Candidates, CandidateWays, CandidateWaySections  # noqa
+from arch.models import *  # noqa
+from flow.models import *  # noqa
 from settings.base import settings
 from settings.db import Base
+from tech.models import *  # noqa
 
 config = context.config
 config.set_main_option('sqlalchemy.url', settings.database_url)

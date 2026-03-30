@@ -6,10 +6,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from settings.db import Base
 
 if TYPE_CHECKING:
-    from arch.models import Rooms, Sections
+    from arch.models import ArchRooms, Sections
 
 
-class RoomAnswers(Base):
+class ArchRoomAnswers(Base):
     __tablename__ = 'room_answers'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -22,5 +22,5 @@ class RoomAnswers(Base):
     reviewer_comment: Mapped[str | None] = mapped_column(Text, nullable=True)
     mark: Mapped[int | None] = mapped_column(Integer, nullable=True)  # 1–5
 
-    room: Mapped['Rooms'] = relationship('Rooms', back_populates='answers')
-    section: Mapped['Sections'] = relationship('Sections', lazy='joined')
+    room = relationship('arch.models.rooms.ArchRooms', back_populates='answers')
+    section = relationship('arch.models.sections.Sections', lazy='joined')

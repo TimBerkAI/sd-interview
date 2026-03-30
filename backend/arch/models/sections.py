@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING, Any
 
-from settings.db import Base
 from sqlalchemy import CheckConstraint, ForeignKey, Integer, String, Text
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from arch.enums import SectionTypeEnum
+from settings.db import Base
 
 if TYPE_CHECKING:
     from arch.models import Templates
@@ -41,7 +41,7 @@ class Sections(Base):
         default=list,
     )
 
-    template: Mapped['Templates'] = relationship('Templates', back_populates='sections')
+    template = relationship('arch.models.templates.Templates', back_populates='sections')
 
     def __repr__(self) -> str:
         return self.name

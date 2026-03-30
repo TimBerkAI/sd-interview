@@ -2,18 +2,18 @@ import secrets
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from settings.db import Base
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from arch.enums import RoomStatusEnum
+from settings.db import Base
 
 if TYPE_CHECKING:
-    from arch.models import RoomAnswers, Tasks, Templates
+    from arch.models import ArchRoomAnswers, ArchTasks, Templates
 
 
-class Rooms(Base):
+class ArchRooms(Base):
     __tablename__ = 'rooms'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -48,13 +48,13 @@ class Rooms(Base):
         default=RoomStatusEnum.PENDING,
     )
 
-    task: Mapped['Tasks'] = relationship('Tasks', lazy='selectin')
-    template: Mapped['Templates'] = relationship('Templates', lazy='selectin')
-    answers: Mapped[list['RoomAnswers']] = relationship(
-        'RoomAnswers',
+    task = relationship('arch.models.tasks.ArchTasks', lazy='selectin')
+    template = relationship('arch.models.templates.Templates', lazy='selectin')
+    answers = relationship(
+        'arch.models.room_answers.ArchRoomAnswers',
         back_populates='room',
         cascade='all, delete-orphan',
-        order_by='RoomAnswers.section_order',
+        order_by='arch.models.room_answers.ArchRoomAnswers.section_order',
         lazy='selectin',
     )
 

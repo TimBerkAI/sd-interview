@@ -24,11 +24,11 @@ app.include_router(api_router)
 app.include_router(flow_router)
 
 from arch.admin import (
-    RoomAdmin,
-    RoomAnswerAdmin,
-    SectionAdmin,
-    TaskAdmin,
-    TemplateAdmin,
+    ArchRoomAdmin as ARoomAdmin,
+    ArchRoomAnswerAdmin as ARoomAnswerAdmin,
+    ArchSectionAdmin as ASectionAdmin,
+    ArchTaskAdmin as ATaskAdmin,
+    ArchTemplateAdmin as ATemplateAdmin,
 )  #  noqa:E402
 from core.admin import TagsAdmin  #  noqa:E402
 from flow.admin import (
@@ -37,13 +37,18 @@ from flow.admin import (
     CandidateWaySectionsAdmin,
     CandidateWayTagsAdmin,
 )  #  noqa:E402
+from tech.admin import (
+    TechRoomAnswersAdmin as TRoomAnswersAdmin,
+    TechRoomsAdmin as TRoomsAdmin,
+    TechTasksAdmin as TTasksAdmin,
+)
 
 admin = Admin(app, engine, title='Arch Admin', base_url='/admin')
-admin.add_view(TaskAdmin)
-admin.add_view(TemplateAdmin)
-admin.add_view(SectionAdmin)
-admin.add_view(RoomAnswerAdmin)
-admin.add_view(RoomAdmin)
+admin.add_view(ATaskAdmin)
+admin.add_view(ATemplateAdmin)
+admin.add_view(ASectionAdmin)
+admin.add_view(ARoomAdmin)
+admin.add_view(ARoomAnswerAdmin)
 # Core
 admin.add_view(TagsAdmin)
 # Flow
@@ -51,3 +56,7 @@ admin.add_view(CandidatesAdmin)
 admin.add_view(CandidateWaysAdmin)
 admin.add_view(CandidateWayTagsAdmin)
 admin.add_view(CandidateWaySectionsAdmin)
+# Tech
+admin.add_view(TTasksAdmin)
+admin.add_view(TRoomsAdmin)
+admin.add_view(TRoomAnswersAdmin)

@@ -1,20 +1,20 @@
 from sqladmin import ModelView
 
 from arch.enums import TaskStatusEnum
-from arch.models import Tasks
+from arch.models import ArchTasks
 from core.fields.ckeditor import CKEditorField
 
 
-class TaskAdmin(ModelView, model=Tasks):
+class ArchTaskAdmin(ModelView, model=ArchTasks):
     name = 'Задача'
     name_plural = 'Задачи'
     icon = 'fa-solid fa-list-check'
 
-    column_list = [Tasks.id, Tasks.name, Tasks.slug, Tasks.status]
-    column_searchable_list = [Tasks.name, Tasks.slug]
-    column_sortable_list = [Tasks.id, Tasks.name, Tasks.status]
+    column_list = [ArchTasks.id, ArchTasks.name, ArchTasks.slug, ArchTasks.status]
+    column_searchable_list = [ArchTasks.name, ArchTasks.slug]
+    column_sortable_list = [ArchTasks.id, ArchTasks.name, ArchTasks.status]
 
-    form_columns = [Tasks.name, Tasks.slug, Tasks.description, Tasks.status]
+    form_columns = [ArchTasks.name, ArchTasks.slug, ArchTasks.description, ArchTasks.status]
     form_overrides = {
         'description': CKEditorField,
     }

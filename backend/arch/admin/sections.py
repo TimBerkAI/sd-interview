@@ -8,7 +8,7 @@ from core.fields.ckeditor import CKEditorField
 from core.fields.json_editor import JSONEditorField
 
 
-class SectionAdmin(ModelView, model=Sections):
+class ArchSectionAdmin(ModelView, model=Sections):
     name = 'Секция'
     name_plural = 'Секции'
     icon = 'fa-solid fa-layer-group'

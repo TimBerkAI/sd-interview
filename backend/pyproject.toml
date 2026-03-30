@@ -24,7 +24,7 @@ dev = [
 [tool.ruff]
 line-length = 120
 indent-width = 4
-src = ["arch", "core", "flow", "settings"]
+src = ["arch", "core", "flow", "settings", "tech"]
 
 [tool.ruff.lint]
 select = [
@@ -70,7 +70,7 @@ unfixable = ["B"]
 "**/admin.py" = ["T20"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["app", "src"]
+known-first-party = ["arch", "core", "flow", "settings", "tech"]
 force-single-line = false
 split-on-trailing-comma = true
 

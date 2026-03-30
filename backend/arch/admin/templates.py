@@ -5,7 +5,7 @@ from arch.models import Templates
 from core.enums import SpecialityEnum
 
 
-class TemplateAdmin(ModelView, model=Templates):
+class ArchTemplateAdmin(ModelView, model=Templates):
     name = 'Шаблон'
     name_plural = 'Шаблоны'
     icon = 'fa-solid fa-file-lines'

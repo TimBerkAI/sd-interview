@@ -1,7 +1,7 @@
-from arch.admin.room_answers import RoomAnswerAdmin
-from arch.admin.rooms import RoomAdmin
-from arch.admin.sections import SectionAdmin
-from arch.admin.tasks import TaskAdmin
-from arch.admin.templates import TemplateAdmin
+from arch.admin.room_answers import ArchRoomAnswerAdmin
+from arch.admin.rooms import ArchRoomAdmin
+from arch.admin.sections import ArchSectionAdmin
+from arch.admin.tasks import ArchTaskAdmin
+from arch.admin.templates import ArchTemplateAdmin
 
-__all__ = ('TaskAdmin', 'SectionAdmin', 'TemplateAdmin', 'RoomAdmin', 'RoomAnswerAdmin')
+__all__ = ('ArchTaskAdmin', 'ArchSectionAdmin', 'ArchTemplateAdmin', 'ArchRoomAdmin', 'ArchRoomAnswerAdmin')

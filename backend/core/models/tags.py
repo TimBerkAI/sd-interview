@@ -12,6 +12,7 @@ class Tags(Base):
     color: Mapped[str] = mapped_column(String(7), nullable=False, default='#000000')
 
     ways = relationship('CandidateWays', secondary='candidate_way_tags', back_populates='tags')
+    tech_tasks = relationship('tech.models.tasks.TechTasks', secondary='tech_task_tags', back_populates='tags')
 
     def __repr__(self) -> str:
         return self.name

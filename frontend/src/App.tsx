@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { TokenEntry } from "./components/TokenEntry";
-import { InterviewRoomWrapper } from "./components/InterviewRoomWrapper";
 import { ThemeProvider } from "./context/ThemeContext";
 import { FlowLayout } from "./components/flow/FlowLayout";
-import { CandidatesPage } from "./components/flow/CandidatesPage";
-import { CandidateDetailPage } from "./components/flow/CandidateDetailPage";
-import { KanbanBoard } from "./components/flow/KanbanBoard";
+
+import { TokenEntry } from "./pages/arch/TokenEntry";
+import { InterviewRoomWrapper } from "./pages/arch/InterviewRoomWrapper";
+import { CandidatesPage } from "./pages/flow/CandidatesPage";
+import { CandidateDetailPage } from "./pages/flow/CandidateDetailPage";
+import { KanbanBoard } from "./pages/flow/KanbanBoard";
+import { TechTokenEntry } from "./pages/tech/TokenEntry";
+import { TechInterviewRoomWrapper } from "./pages/tech/InterviewRoom";
 
 function App() {
   return (
@@ -14,6 +17,10 @@ function App() {
         <Routes>
           <Route path="/" element={<TokenEntry />} />
           <Route path="/room/:token" element={<InterviewRoomWrapper />} />
+
+          <Route path="/tech" element={<TechTokenEntry />} />
+          <Route path="/tech/room/:token" element={<TechInterviewRoomWrapper />} />
+
           <Route path="/flow" element={<FlowLayout />}>
             <Route index element={<Navigate to="/flow/candidates" replace />} />
             <Route path="candidates" element={<CandidatesPage />} />

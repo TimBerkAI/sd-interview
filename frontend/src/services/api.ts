@@ -1,4 +1,4 @@
-import type { RoomWithDetails, UserRole, RoomSession, Candidate, CandidateWay, WaySection } from "../types";
+import type { RoomWithDetails, UserRole, RoomSession, Candidate, CandidateWay, WaySection, TechRoomSession } from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
@@ -172,6 +172,63 @@ export const api = {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(update),
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  },
+
+  async validateTechToken(token: string): Promise<TechRoomSession | null> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/tech/validate-token/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch {
+      return null;
+    }
+  },
+
+  async updateTechAnswer(answerId: number, candidateAnswer: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/tech/answer/${answerId}/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ candidate_answer: candidateAnswer }),
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  },
+
+  async updateTechFeedback(
+    answerId: number,
+    reviewerComment: string,
+    score: Record<string, number> | null,
+  ): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/tech/answer/${answerId}/feedback/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviewer_comment: reviewerComment, score }),
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  },
+
+  async updateTechRoomStatus(roomId: number, status: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/tech/room/${roomId}/status/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
       });
       return response.ok;
     } catch {

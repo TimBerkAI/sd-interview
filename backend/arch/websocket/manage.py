@@ -1,21 +1,21 @@
 import json
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from fastapi import WebSocket
 
 
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: Dict[int, List[WebSocket]] = {}
+        self.active_connections: Dict[Union[int, str], List[WebSocket]] = {}
 
-    async def connect(self, websocket: WebSocket, room_id: int):
+    async def connect(self, websocket: WebSocket, room_id: Union[int, str]):
         await websocket.accept()
         if room_id not in self.active_connections:
             self.active_connections[room_id] = []
         self.active_connections[room_id].append(websocket)
         print(f'Client connected to room {room_id}. Total connections: {len(self.active_connections[room_id])}')
 
-    def disconnect(self, websocket: WebSocket, room_id: int):
+    def disconnect(self, websocket: WebSocket, room_id: Union[int, str]):
         if room_id in self.active_connections:
             if websocket in self.active_connections[room_id]:
                 self.active_connections[room_id].remove(websocket)
@@ -26,7 +26,7 @@ class ConnectionManager:
             if len(self.active_connections[room_id]) == 0:
                 del self.active_connections[room_id]
 
-    async def broadcast_to_room(self, room_id: int, message: dict, exclude: WebSocket | None = None):
+    async def broadcast_to_room(self, room_id: Union[int, str], message: dict, exclude: WebSocket | None = None):
         if room_id in self.active_connections:
             disconnected = []
             for connection in self.active_connections[room_id]:

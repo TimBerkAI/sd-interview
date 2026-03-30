@@ -1,3 +1,5 @@
+import typing as t
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -15,10 +17,19 @@ class RoomAnswerCreateDTO(BaseModel):
 class RoomAnswerUpdateDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    order: int | None = None
     candidate_answer: str | None = None
     reviewer_comment: str | None = None
     score: dict | None = None
+
+
+class TaskInAnswerDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    type: str
+    description: str | None = None
+    score_scale: list[dict[str, t.Any]]
 
 
 class RoomAnswerDTO(BaseModel):
@@ -31,3 +42,4 @@ class RoomAnswerDTO(BaseModel):
     candidate_answer: str | None = None
     reviewer_comment: str | None = None
     score: dict | None = None
+    task: TaskInAnswerDTO

@@ -4,7 +4,7 @@ import { User, Calendar, Tag, ChevronRight } from 'lucide-react';
 import { api } from '../../services/api';
 import type { CandidateWay } from '../../types';
 import { WayDecision, WaySectionStatus } from '../../types';
-import { CandidateWayModal } from './CandidateWayModal';
+import { CandidateWayModal } from '../../components/flow/CandidateWayModal';
 
 const COLUMNS: { key: WayDecision; label: string; headerCls: string; dotCls: string; dropCls: string }[] = [
   {

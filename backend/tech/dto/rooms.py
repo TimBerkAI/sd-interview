@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
+from tech.dto.room_answers import RoomAnswerDTO
 from tech.enums import RoomStatusEnum
 
 
@@ -37,3 +38,17 @@ class RoomDTO(BaseModel):
     candidate_token: str
     reviewer_token: str
     status: RoomStatusEnum
+
+
+class RoomWithAnswersDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    description: str | None = None
+    started_at: datetime
+    ended_at: datetime
+    candidate_token: str
+    reviewer_token: str
+    status: RoomStatusEnum
+    answers: list[RoomAnswerDTO]

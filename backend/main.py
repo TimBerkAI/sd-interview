@@ -7,6 +7,8 @@ from starlette.middleware.gzip import GZipMiddleware
 from arch.api.routes import router as api_router
 from arch.websocket.routes import router as websocket_router
 from flow.api.routes import router as flow_router
+from tech.api.routes import router as tech_router
+from tech.api.websocket import router as tech_websocket_router
 from settings.db import engine
 
 app = FastAPI(title='My Architecture App')
@@ -20,8 +22,10 @@ app.add_middleware(
 )
 app.mount('/static', StaticFiles(directory='static'), name='static')
 app.include_router(websocket_router)
+app.include_router(tech_websocket_router)
 app.include_router(api_router)
 app.include_router(flow_router)
+app.include_router(tech_router)
 
 from arch.admin import (
     ArchRoomAdmin as ARoomAdmin,

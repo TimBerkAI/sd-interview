@@ -194,3 +194,46 @@ export interface CandidateWay {
   sections: WaySection[];
   candidate: Candidate | null;
 }
+
+// Tech interview types
+export enum TechTaskType {
+  THEORY = 'THEORY',
+  PRACTICE = 'PRACTICE',
+}
+
+export interface TechTask {
+  id: number;
+  name: string;
+  type: TechTaskType;
+  description: string | null;
+  score_scale: ScoreScale[];
+}
+
+export interface TechRoomAnswer {
+  id: number;
+  room_id: number;
+  task_id: number;
+  order: number;
+  candidate_answer: string | null;
+  reviewer_comment: string | null;
+  score: Record<string, number> | null;
+  task: TechTask;
+}
+
+export interface TechRoom {
+  id: number;
+  name: string;
+  description: string | null;
+  started_at: string;
+  ended_at: string;
+  candidate_token: string;
+  reviewer_token: string;
+  status: RoomStatus;
+  answers: TechRoomAnswer[];
+}
+
+export interface TechRoomSession {
+  room: TechRoom;
+  role: UserRole;
+  token: string;
+}

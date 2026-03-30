@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogIn } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
+import { Code as Code2 } from 'lucide-react';
+import { ThemeToggle } from '../../components/ThemeToggle';
 
-export function TokenEntry() {
+export function TechTokenEntry() {
   const navigate = useNavigate();
   const [token, setToken] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (token.trim()) {
-      navigate(`/room/${token.trim()}`);
+      navigate(`/tech/room/${token.trim()}`);
     }
   };
 
@@ -23,9 +23,9 @@ export function TokenEntry() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-900 dark:bg-white rounded-2xl mb-4 shadow-lg">
-            <LogIn className="w-8 h-8 text-white dark:text-gray-900" />
+            <Code2 className="w-8 h-8 text-white dark:text-gray-900" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Interview Room</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Tech Interview</h1>
           <p className="text-gray-500 dark:text-gray-400">Enter your access token to join</p>
         </div>
 
@@ -53,9 +53,9 @@ export function TokenEntry() {
         <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-200 dark:border-gray-700/50">
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
             Demo tokens: <br />
-            <code className="text-gray-900 dark:text-white">candidate_demo_token_12345</code>
+            <code className="text-gray-900 dark:text-white">candidate-backend-python-senior-demo</code>
             <br />
-            <code className="text-gray-900 dark:text-white">reviewer_demo_token_67890</code>
+            <code className="text-gray-900 dark:text-white">reviewer-backend-python-senior-demo</code>
           </p>
         </div>
       </div>

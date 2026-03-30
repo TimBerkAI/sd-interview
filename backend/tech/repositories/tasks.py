@@ -27,12 +27,11 @@ class TaskRepository:
 
         task = TechTasks(
             name=data.name,
-            slug=data.slug,
             specialty=data.specialty,
             tags=tags,
             type=data.type,
             description=data.description,
-            evaluation=data.evaluation,
+            score_scale=data.score_scale,
             status=data.status,
         )
         self.session.add(task)

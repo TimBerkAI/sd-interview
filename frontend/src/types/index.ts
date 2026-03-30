@@ -195,6 +195,84 @@ export interface CandidateWay {
   candidate: Candidate | null;
 }
 
+// Admin types – Arch
+export interface ArchTask {
+  id: number;
+  name: string;
+  slug: string | null;
+  description: string | null;
+  status: TaskStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ArchSection {
+  id: number;
+  template_id: number;
+  name: string;
+  description: string | null;
+  order: number;
+  type: SectionType;
+  score_scale: ScoreScale[];
+}
+
+export interface ArchTemplate {
+  id: number;
+  name: string;
+  specialty: Specialty | null;
+  status: TemplateStatus;
+  sections: ArchSection[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ArchRoom {
+  id: number;
+  name: string;
+  description: string | null;
+  task_id: number;
+  template_id: number;
+  started_at: string;
+  ended_at: string;
+  candidate_token: string;
+  reviewer_token: string;
+  status: RoomStatus;
+  task?: { id: number; name: string } | null;
+  template?: { id: number; name: string } | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Admin types – Tech
+export enum TechTaskStatus {
+  DRAFT = 'DRAFT',
+  AWAITING_CONFIRMATION = 'AWAITING_CONFIRMATION',
+  CONFIRMED = 'CONFIRMED',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export interface AdminTechTask {
+  id: number;
+  name: string;
+  specialty: Specialty;
+  type: TechTaskType;
+  description: string | null;
+  score_scale: ScoreScale[];
+  status: TechTaskStatus;
+}
+
+export interface AdminTechRoom {
+  id: number;
+  name: string;
+  description: string | null;
+  started_at: string;
+  ended_at: string;
+  candidate_token: string;
+  reviewer_token: string;
+  status: RoomStatus;
+  tasks: AdminTechTask[];
+}
+
 // Tech interview types
 export enum TechTaskType {
   THEORY = 'THEORY',

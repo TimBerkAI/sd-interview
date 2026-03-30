@@ -52,7 +52,7 @@ export function CandidateDetailPage() {
   return (
     <div className="p-8 max-w-4xl">
       <Link
-        to="/flow/candidates"
+        to="/admin/flow/candidates"
         className="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
@@ -124,7 +124,7 @@ export function CandidateDetailPage() {
               return (
                 <Link
                   key={way.id}
-                  to={`/flow/ways?highlight=${way.id}`}
+                  to={`/admin/flow/kanban?highlight=${way.id}`}
                   className="block bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-gray-400 dark:hover:border-gray-600 transition-all"
                 >
                   <div className="flex items-center justify-between mb-2">

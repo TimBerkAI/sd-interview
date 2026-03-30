@@ -144,7 +144,7 @@ export function CandidatesPage() {
             {paginated.map((candidate) => (
               <Link
                 key={candidate.id}
-                to={`/flow/candidates/${candidate.id}`}
+                to={`/admin/flow/candidates/${candidate.id}`}
                 className="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md transition-all"
               >
                 <div className="flex items-start justify-between mb-4">

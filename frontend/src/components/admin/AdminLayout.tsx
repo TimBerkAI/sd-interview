@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { BookOpen, LayoutGrid as Layout, DoorOpen, Code, Server, Settings } from 'lucide-react';
+import { BookOpen, LayoutGrid as Layout, DoorOpen, Code, Server, Settings, Users, SquareKanban as KanbanSquare } from 'lucide-react';
 import { ThemeToggle } from '../ThemeToggle';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -53,6 +53,22 @@ export function AdminLayout() {
               <NavLink to="/admin/tech/rooms" className={navLinkClass}>
                 <Server className="w-4 h-4" />
                 Rooms
+              </NavLink>
+            </div>
+          </div>
+
+          <div>
+            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600">
+              Hiring Flow
+            </p>
+            <div className="space-y-1">
+              <NavLink to="/admin/flow/candidates" className={navLinkClass}>
+                <Users className="w-4 h-4" />
+                Candidates
+              </NavLink>
+              <NavLink to="/admin/flow/kanban" className={navLinkClass}>
+                <KanbanSquare className="w-4 h-4" />
+                Kanban Board
               </NavLink>
             </div>
           </div>
